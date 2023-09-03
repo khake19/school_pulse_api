@@ -15,6 +15,16 @@ defmodule SchoolPulseApiWeb.UserJSON do
     %{data: data(user)}
   end
 
+  def create(%{user: user, token: token}) do
+    %{
+      data: %{
+        id: user.id,
+        email: user.email,
+        token: token
+      }
+    }
+  end
+
   defp data(%User{} = user) do
     %{
       id: user.id,
@@ -23,4 +33,5 @@ defmodule SchoolPulseApiWeb.UserJSON do
       email: user.email
     }
   end
+
 end
