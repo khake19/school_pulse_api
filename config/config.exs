@@ -63,3 +63,7 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :school_pulse_api, SchoolPulseApiWeb.Auth.Guardian,
+  issuer: "school_pulse_api",
+  secret_key: "5fsvBQuIYHszLGTjtDtKsNa1VCUkJXauJktpCnjQhR2G9Wo9GJSYYWgs0KIWjT1z"

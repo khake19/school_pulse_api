@@ -38,6 +38,17 @@ defmodule SchoolPulseApi.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single account.any()
+  Returns 'nil' if the Account does not exists
+  """
+
+  def get_account_by_email(email) do
+    User
+    |> where(email: ^email)
+    |> Repo.one()
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples

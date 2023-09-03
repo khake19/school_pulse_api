@@ -8,6 +8,8 @@ defmodule SchoolPulseApi.Accounts.User do
     field :first_name, :string
     field :last_name, :string
     field :email, :string
+    field :username, :string
+    field :password, :string
 
     timestamps()
   end
@@ -15,8 +17,15 @@ defmodule SchoolPulseApi.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email])
-    |> validate_required([:first_name, :last_name, :email])
+    |> cast(attrs, [:first_name, :last_name, :email, :password])
+    |> validate_required([:email, :password])
     |> unique_constraint(:email)
+    |> put_password_hash()
   end
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password: Argon2.hash_pwd_salt(password))
+  end
+
+  defp put_password_hash(changeset), do: changeset
 end

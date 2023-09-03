@@ -2,6 +2,7 @@ defmodule SchoolPulseApiWeb.Router do
   use SchoolPulseApiWeb, :router
 
   pipeline :api do
+    plug CORSPlug
     plug :accepts, ["json"]
   end
 
