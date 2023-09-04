@@ -17,7 +17,6 @@ defmodule SchoolPulseApiWeb.UserController do
           {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/users/#{user}")
       |> render(:create, user: user, token: token)
     end
   end

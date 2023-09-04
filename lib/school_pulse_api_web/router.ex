@@ -1,14 +1,34 @@
 defmodule SchoolPulseApiWeb.Router do
   use SchoolPulseApiWeb, :router
+  use Plug.ErrorHandler
+
+  def handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{message: message}}) do
+    conn |> json(%{errors: message}) |> halt()
+  end
+
+  def handle_errors(conn, %{reason: %{message: message}}) do
+    conn |> json(%{errors: message}) |> halt()
+  end
 
   pipeline :api do
     plug CORSPlug
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug SchoolPulseApiWeb.Auth.Pipeline
+  end
+
   scope "/api", SchoolPulseApiWeb do
     pipe_through :api
-    resources "/users", UserController, except: [:new, :edit]
+    post "/users", UserController, :create
+    post "/sign_in", AuthController, :sign_in
+
+  end
+
+  scope "/api", SchoolPulseApiWeb do
+    pipe_through [:api, :auth]
+    get "/users", UserController, :index
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

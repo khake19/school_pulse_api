@@ -1,16 +1,15 @@
 defmodule SchoolPulseApiWeb.AuthController do
   use SchoolPulseApiWeb, :controller
 
-  alias SchoolPulseApiWeb.Auth.Guardian
-  alias SchoolPulseApi.Accounts
+  alias SchoolPulseApiWeb.{Auth.Guardian, Auth.ErrorResponse}
 
-  def get_token(conn, _params) do
-    user = Accounts.get_user!(1)
-    {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
-
-    dbg(jwt)
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(200, Jason.encode!(%{token: jwt}))
+  def sign_in(conn, %{"email" => email, "password" => password}) do
+    case Guardian.authenticate(email, password) do
+      {:ok, account, token} ->
+        conn
+        |> put_status(:ok)
+        |> render(:account_token, %{account: account, token: token})
+      {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Email or password incorrect"
+    end
   end
 end
