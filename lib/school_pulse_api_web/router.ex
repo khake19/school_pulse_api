@@ -17,6 +17,7 @@ defmodule SchoolPulseApiWeb.Router do
 
   pipeline :auth do
     plug SchoolPulseApiWeb.Auth.Pipeline
+    plug SchoolPulseApiWeb.Auth.SetAccount
   end
 
   scope "/api", SchoolPulseApiWeb do
