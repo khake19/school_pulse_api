@@ -3,22 +3,12 @@ defmodule SchoolPulseApiWeb.UserController do
 
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Accounts.User
-  alias SchoolPulseApiWeb.Auth.Guardian
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, _params) do
     users = Accounts.list_users()
     render(conn, :index, users: users)
-  end
-
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.create_user(user_params),
-          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
-      conn
-      |> put_status(:created)
-      |> render(:create, user: user, token: token)
-    end
   end
 
   def show(conn, %{"id" => id}) do
