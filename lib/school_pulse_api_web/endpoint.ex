@@ -45,6 +45,6 @@ defmodule SchoolPulseApiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug CORSPlug
+  plug Corsica, origins: "*", allow_headers: :all
   plug SchoolPulseApiWeb.Router
 end

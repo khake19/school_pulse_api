@@ -46,7 +46,7 @@ defmodule SchoolPulseApi.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:cors_plug, "~> 3.0"},
+      {:corsica, "~> 2.1.2"},
       {:guardian, "~> 2.3.1"},
       {:guardian_db, "~> 2.0"},
       {:argon2_elixir, "~> 3.0"},
