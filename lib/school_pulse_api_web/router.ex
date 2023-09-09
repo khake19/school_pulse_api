@@ -28,7 +28,7 @@ defmodule SchoolPulseApiWeb.Router do
 
   scope "/api", SchoolPulseApiWeb do
     pipe_through [:api, :auth]
-    get "/users", UserController, :index
+    resources "/users", UserController, only: [:index, :show]
     get "/auth/sign_out", AuthController, :sign_out
     get "/auth/refresh_token", AuthController, :refresh_token
   end
