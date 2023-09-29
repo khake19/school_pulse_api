@@ -7,6 +7,7 @@ defmodule SchoolPulseApiWeb.UserController do
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, _params) do
+
     users = Accounts.list_users()
     render(conn, :index, users: users)
   end
