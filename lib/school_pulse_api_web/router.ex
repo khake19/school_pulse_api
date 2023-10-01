@@ -28,9 +28,11 @@ defmodule SchoolPulseApiWeb.Router do
   scope "/api", SchoolPulseApiWeb do
     pipe_through [:api, :auth]
     resources "/users", UserController, only: [:index, :show]
+    resources "/teachers", TeacherController, except: [:new, :edit]
+    resources "/schools", SchoolController, except: [:new, :edit]
+
     get "/auth/sign_out", AuthController, :sign_out
     get "/auth/refresh_token", AuthController, :refresh_token
-    resources "/schools", SchoolController
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

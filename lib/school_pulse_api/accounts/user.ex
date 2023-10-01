@@ -1,6 +1,7 @@
 defmodule SchoolPulseApi.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias SchoolPulseApi.Teachers
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,6 +11,8 @@ defmodule SchoolPulseApi.Accounts.User do
     field :email, :string
     field :username, :string
     field :password, :string
+
+    has_one :teacher, Teachers.Teacher, foreign_key: :user_id
 
     timestamps()
   end
