@@ -1,4 +1,5 @@
 defmodule SchoolPulseApi.Schools.School do
+  alias SchoolPulseApi.Teachers
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -6,6 +7,8 @@ defmodule SchoolPulseApi.Schools.School do
   @foreign_key_type :binary_id
   schema "schools" do
     field :name, :string
+
+    has_many :teachers, Teachers.Teacher, foreign_key: :school_id
 
     timestamps()
   end

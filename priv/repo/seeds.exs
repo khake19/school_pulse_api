@@ -14,8 +14,6 @@ alias SchoolPulseApi.Repo
 alias SchoolPulseApi.Accounts.User
 alias SchoolPulseApi.Schools.School
 
-# Repo.delete_all(User)
-
 # Repo.insert!(%User{first_name: "kerk", email: "kerk.jazul@gmail.com"})
 # Repo.insert!(%User{first_name: "hazel", email: "hazel.jazul@gmail.com"})
 # Repo.insert!(%User{first_name: "mario", email: "mario@gmail.com"})

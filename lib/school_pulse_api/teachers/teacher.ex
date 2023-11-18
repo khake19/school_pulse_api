@@ -1,5 +1,6 @@
 defmodule SchoolPulseApi.Teachers.Teacher do
   alias SchoolPulseApi.Accounts
+  alias SchoolPulseApi.Schools
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,6 +10,7 @@ defmodule SchoolPulseApi.Teachers.Teacher do
     field :position, :string
 
     belongs_to :user, Accounts.User
+    belongs_to :school, Schools.School 
     timestamps()
   end
 

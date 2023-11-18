@@ -1,6 +1,7 @@
 defmodule SchoolPulseApiWeb.SchoolController do
   use SchoolPulseApiWeb, :controller
 
+  alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Schools.School
 
@@ -39,5 +40,10 @@ defmodule SchoolPulseApiWeb.SchoolController do
     with {:ok, %School{}} <- Schools.delete_school(school) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def teachers(conn, %{"id" => id}) do
+    school = Schools.get_school!(id) |> Repo.preload(:teachers)
+    render(conn, :teachers, school: school)
   end
 end
