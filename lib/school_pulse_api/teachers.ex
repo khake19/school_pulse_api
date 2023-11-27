@@ -17,8 +17,8 @@ defmodule SchoolPulseApi.Teachers do
       [%Teacher{}, ...]
 
   """
-  def list_teachers do
-    Repo.all(Teacher)
+  def list_teachers(school_id) do
+    Repo.all(from t in Teacher, where: t.school_id == ^school_id)
   end
 
   @doc """

@@ -11,8 +11,11 @@
 # and so on) as they will fail if something goes wrong.
 
 alias SchoolPulseApi.Repo
+alias SchoolPulseApi.Accounts
 alias SchoolPulseApi.Accounts.User
+alias SchoolPulseApi.Schools
 alias SchoolPulseApi.Schools.School
+alias SchoolPulseApi.Teachers.Teacher
 
 # Repo.insert!(%User{first_name: "kerk", email: "kerk.jazul@gmail.com"})
 # Repo.insert!(%User{first_name: "hazel", email: "hazel.jazul@gmail.com"})
@@ -34,4 +37,8 @@ schools = [
   "Managanaga Elementary School"
 ]
 
-Enum.map(schools, &(Repo.insert!(%School{name: &1})))
+users = Accounts.list_users()
+school = Schools.get_school!("03e221fb-f781-4488-af24-74661dc92fb8")
+
+# Enum.map(schools, &(Repo.insert!(%School{name: &1})))
+Enum.map(users, &(Repo.insert!(%Teacher{position: "teacher 1", user: &1, school: school})))

@@ -18,7 +18,9 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
   defp data(%Teacher{} = teacher) do
     %{
       id: teacher.id,
-      position: teacher.position
+      position: teacher.position,
+      first_name: teacher.user.first_name,
+      last_name: teacher.user.last_name
     }
   end
 end

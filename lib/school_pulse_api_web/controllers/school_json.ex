@@ -15,14 +15,6 @@ defmodule SchoolPulseApiWeb.SchoolJSON do
     %{data: data(school)}
   end
 
-  def teachers(%{school: school}) do
-    %{data: %{
-      id: school.id,
-      name: school.name,
-      teachers: school.teachers
-    }}
-  end
-
   defp data(%School{} = school) do
     %{
       id: school.id,

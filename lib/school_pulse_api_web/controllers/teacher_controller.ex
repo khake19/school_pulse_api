@@ -1,13 +1,15 @@
 defmodule SchoolPulseApiWeb.TeacherController do
   use SchoolPulseApiWeb, :controller
 
+  alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Teachers
   alias SchoolPulseApi.Teachers.Teacher
 
+
   action_fallback SchoolPulseApiWeb.FallbackController
 
-  def index(conn, _params) do
-    teachers = Teachers.list_teachers()
+  def index(conn, %{"school_id" => school_id}) do
+    teachers = Teachers.list_teachers(school_id) |> Repo.preload(:user)
     render(conn, :index, teachers: teachers)
   end
 
