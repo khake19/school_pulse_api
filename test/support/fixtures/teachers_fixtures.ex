@@ -17,4 +17,20 @@ defmodule SchoolPulseApi.TeachersFixtures do
 
     teacher
   end
+
+  @doc """
+  Generate a position.
+  """
+  def position_fixture(attrs \\ %{}) do
+    {:ok, position} =
+      attrs
+      |> Enum.into(%{
+        name: "some name",
+        salary_grade: "some salary_grade",
+        type: "type"
+      })
+      |> SchoolPulseApi.Teachers.create_position()
+
+    position
+  end
 end

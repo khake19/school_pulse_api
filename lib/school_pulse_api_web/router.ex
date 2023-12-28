@@ -33,6 +33,8 @@ defmodule SchoolPulseApiWeb.Router do
       resources "/teachers", TeacherController, except: [:new, :edit]
     end
 
+    get "/positions", PositionController, :index
+
     get "/auth/sign_out", AuthController, :sign_out
     get "/auth/refresh_token", AuthController, :refresh_token
   end
