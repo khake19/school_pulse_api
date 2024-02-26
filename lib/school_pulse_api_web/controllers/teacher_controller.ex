@@ -9,7 +9,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, %{"school_id" => school_id}) do
-    teachers = Teachers.list_teachers(school_id) |> Repo.preload(:user)
+    teachers = Teachers.list_teachers(school_id) |> Repo.preload([:user, :school, :position])
     render(conn, :index, teachers: teachers)
   end
 

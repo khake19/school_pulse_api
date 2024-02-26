@@ -1,6 +1,7 @@
 defmodule SchoolPulseApi.Teachers.Position do
   use Ecto.Schema
   import Ecto.Changeset
+  alias SchoolPulseApi.Teachers
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -8,6 +9,7 @@ defmodule SchoolPulseApi.Teachers.Position do
     field :name, :string
     field :salary_grade, :string
     field :type, :string
+    has_many :teachers, Teachers.Teacher
 
     timestamps()
   end
