@@ -4,6 +4,9 @@ defmodule SchoolPulseApiWeb.TeacherController do
   alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Teachers
   alias SchoolPulseApi.Teachers.Teacher
+  alias SchoolPulseApi.Accounts
+  alias SchoolPulseApi.Accounts.User
+  alias SchoolPulseApi.Schools
 
 
   action_fallback SchoolPulseApiWeb.FallbackController
@@ -13,11 +16,16 @@ defmodule SchoolPulseApiWeb.TeacherController do
     render(conn, :index, teachers: teachers)
   end
 
-  def create(conn, %{"teacher" => teacher_params}) do
-    with {:ok, %Teacher{} = teacher} <- Teachers.create_teacher(teacher_params) do
+  def create(conn, %{"school_id" => school_id, "teacher" => teacher_params}) do
+    position = Teachers.get_position!(teacher_params["position"])
+    school = Schools.get_school!(school_id)
+
+    with {:ok, %User{} = user} <- Accounts.create_account(teacher_params),
+         {:ok, %Teacher{} = teacher} <- Teachers.create_teacher(%{user_id: user.id, school_id: school.id, position_id: position.id})
+    do
+      teacher = teacher |> Repo.preload([:position, :user])
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/teachers/#{teacher}")
       |> render(:show, teacher: teacher)
     end
   end

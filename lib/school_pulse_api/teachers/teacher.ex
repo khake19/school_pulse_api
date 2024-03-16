@@ -1,4 +1,6 @@
 defmodule SchoolPulseApi.Teachers.Teacher do
+  use Ecto.Schema
+  import Ecto.Changeset
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Teachers
@@ -12,5 +14,10 @@ defmodule SchoolPulseApi.Teachers.Teacher do
     belongs_to :user, Accounts.User
     belongs_to :school, Schools.School
     timestamps()
+  end
+
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:position_id, :user_id, :school_id])
   end
 end

@@ -29,8 +29,8 @@ defmodule SchoolPulseApiWeb.Router do
     pipe_through [:api, :auth]
     resources "/users", UserController, only: [:index, :show]
 
-    resources "/schools", SchoolController, only: [:index, :show] do
-      resources "/teachers", TeacherController, except: [:new, :edit]
+    resources "/schools", SchoolController do
+      resources "/teachers", TeacherController
     end
 
     get "/positions", PositionController, :index

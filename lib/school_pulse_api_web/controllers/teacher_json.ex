@@ -20,7 +20,8 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
       id: teacher.id,
       position: teacher.position.name,
       first_name: teacher.user.first_name,
-      last_name: teacher.user.last_name
+      last_name: teacher.user.last_name,
+      email: teacher.user.email
     }
   end
 end

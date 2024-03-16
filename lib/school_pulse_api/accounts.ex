@@ -66,6 +66,12 @@ defmodule SchoolPulseApi.Accounts do
     |> Repo.insert()
   end
 
+  def create_account(attrs \\ %{}) do
+    %User{}
+    |> User.account_no_password_changeset(attrs)
+    |> Repo.insert()
+  end
+
   @doc """
   Updates a user.
 

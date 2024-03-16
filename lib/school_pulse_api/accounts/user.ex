@@ -26,6 +26,13 @@ defmodule SchoolPulseApi.Accounts.User do
     |> put_password_hash()
   end
 
+  def account_no_password_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:first_name, :last_name, :email])
+    |> validate_required([:email])
+    |> unique_constraint(:email)
+  end
+
   defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
     change(changeset, password: Argon2.hash_pwd_salt(password))
   end
