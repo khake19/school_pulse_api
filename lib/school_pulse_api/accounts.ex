@@ -66,10 +66,40 @@ defmodule SchoolPulseApi.Accounts do
     |> Repo.insert()
   end
 
-  def create_account(attrs \\ %{}) do
+  @doc """
+  Creates a user.
+
+  ## Examples
+
+      iex> create_user_no_credential(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user_no_credential(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user_no_credential(attrs \\ %{}) do
     %User{}
     |> User.account_no_password_changeset(attrs)
     |> Repo.insert()
+  end
+
+    @doc """
+  Updates a user.
+
+  ## Examples
+
+      iex> update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user_no_credential(%User{} = user, attrs) do
+    user
+    |> User.account_no_password_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """

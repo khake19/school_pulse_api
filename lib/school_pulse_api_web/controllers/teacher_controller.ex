@@ -20,7 +20,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
     position = Teachers.get_position!(teacher_params["position"])
     school = Schools.get_school!(school_id)
 
-    with {:ok, %User{} = user} <- Accounts.create_account(teacher_params),
+    with {:ok, %User{} = user} <- Accounts.create_user_no_credential(teacher_params),
          {:ok, %Teacher{} = teacher} <- Teachers.create_teacher(%{user_id: user.id, school_id: school.id, position_id: position.id})
     do
       teacher = teacher |> Repo.preload([:position, :user])
@@ -31,14 +31,19 @@ defmodule SchoolPulseApiWeb.TeacherController do
   end
 
   def show(conn, %{"id" => id}) do
-    teacher = Teachers.get_teacher!(id)
+    teacher = Teachers.get_teacher!(id) |> Repo.preload([:position, :user])
     render(conn, :show, teacher: teacher)
   end
 
-  def update(conn, %{"id" => id, "teacher" => teacher_params}) do
+  def update(conn, %{"school_id" => school_id, "id" => id, "teacher" => teacher_params}) do
     teacher = Teachers.get_teacher!(id)
+    user = Accounts.get_user!(teacher.user_id)
+    position = Teachers.get_position!(teacher_params["position"])
+    school = Schools.get_school!(school_id)
 
-    with {:ok, %Teacher{} = teacher} <- Teachers.update_teacher(teacher, teacher_params) do
+    with {:ok, %User{} = user} <- Accounts.update_user_no_credential(user, teacher_params),
+    {:ok, %Teacher{} = teacher} <- Teachers.update_teacher(teacher, %{user_id: user.id, school_id: school.id, position_id: position.id}) do
+      teacher = teacher |> Repo.preload([:position, :user])
       render(conn, :show, teacher: teacher)
     end
   end

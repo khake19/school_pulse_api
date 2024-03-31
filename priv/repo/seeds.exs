@@ -11,18 +11,14 @@
 # and so on) as they will fail if something goes wrong.
 
 alias SchoolPulseApi.Repo
-# alias SchoolPulseApi.Accounts
-# alias SchoolPulseApi.Accounts.User
-# alias SchoolPulseApi.Schools
-# alias SchoolPulseApi.Schools.School
-# alias SchoolPulseApi.Teachers.Teacher
+alias SchoolPulseApi.Accounts
+alias SchoolPulseApi.Accounts.User
+alias SchoolPulseApi.Schools
+alias SchoolPulseApi.Schools.School
+alias SchoolPulseApi.Teachers.Teacher
 alias SchoolPulseApi.Teachers.Position
 
-# Repo.insert!(%User{first_name: "kerk", email: "kerk.jazul@gmail.com"})
-# Repo.insert!(%User{first_name: "hazel", email: "hazel.jazul@gmail.com"})
-# Repo.insert!(%User{first_name: "mario", email: "mario@gmail.com"})
-# Repo.insert!(%User{first_name: "luigi", email: "luigi@gmail.com"})
-# Repo.insert!(%User{first_name: "watsy", email: "watsy@gmail.com"})
+Repo.insert!(%User{first_name: "test", email: "test@schoolpulse.com", password: Argon2.hash_pwd_salt("test123")})
 
 schools = [
   "Aroroy East Central School",
@@ -38,11 +34,7 @@ schools = [
   "Managanaga Elementary School"
 ]
 
-# users = Accounts.list_users()
-# school = Schools.get_school!("03e221fb-f781-4488-af24-74661dc92fb8")
-
-# Enum.map(schools, &(Repo.insert!(%School{name: &1})))
-# Enum.map(users, &(Repo.insert!(%Teacher{position: "teacher 1", user: &1, school: school})))
+Enum.map(schools, &(Repo.insert!(%School{name: &1})))
 
 positions = [
   %{
