@@ -48,10 +48,12 @@ defmodule SchoolPulseApiWeb.TeacherController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"school_id" => _school_id, "id" => id}) do
     teacher = Teachers.get_teacher!(id)
+    user = Accounts.get_user!(teacher.user_id)
 
-    with {:ok, %Teacher{}} <- Teachers.delete_teacher(teacher) do
+    with {:ok, %Teacher{}} <- Teachers.delete_teacher(teacher),
+    {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
   end
