@@ -6,6 +6,22 @@ defmodule SchoolPulseApi.Teachers.Teacher do
   alias SchoolPulseApi.Teachers
 
   use Ecto.Schema
+
+  @derive {
+    Flop.Schema,
+    filterable: [:user_email],
+    sortable: [:user_email],
+    adapter_opts: [
+      join_fields: [
+        user_email: [
+          binding: :users,
+          field: :email,
+          ecto_type: :string
+        ] 
+      ]
+    ]
+  }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "teachers" do

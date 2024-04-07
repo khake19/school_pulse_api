@@ -34,7 +34,7 @@ defmodule SchoolPulseApi.MixProject do
     [
       {:phoenix, "~> 1.7.7"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.10"},
+      {:ecto_sql, "~> 3.11"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.8.0"},
       {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
@@ -50,6 +50,7 @@ defmodule SchoolPulseApi.MixProject do
       {:guardian, "~> 2.3.1"},
       {:guardian_db, "~> 2.0"},
       {:argon2_elixir, "~> 3.0"},
+      {:flop, "~> 0.25.0"},
     ]
   end
 

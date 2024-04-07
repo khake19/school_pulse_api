@@ -17,8 +17,9 @@ defmodule SchoolPulseApi.Teachers do
       [%Teacher{}, ...]
 
   """
-  def list_teachers(school_id) do
+  def list_teachers(school_id, params \\ %{}) do
     Repo.all(from t in Teacher, where: t.school_id == ^school_id, order_by: [desc: t.inserted_at])
+    |> Flop.validate_and_run(params, for: Teacher)
   end
 
   @doc """
