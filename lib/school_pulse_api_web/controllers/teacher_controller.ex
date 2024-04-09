@@ -12,9 +12,8 @@ defmodule SchoolPulseApiWeb.TeacherController do
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, %{"school_id" => school_id}) do
-    with {:ok, {result, _meta}} <- Teachers.list_teachers(school_id, conn.query_params) do
-
-    render(conn, :index, teachers: result)
+    with {:ok, result} <- Teachers.list_teachers(school_id, conn.query_params) do
+      render(conn, :index, teachers: result)
     end
   end
 
