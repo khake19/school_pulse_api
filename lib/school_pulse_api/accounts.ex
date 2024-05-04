@@ -84,7 +84,7 @@ defmodule SchoolPulseApi.Accounts do
     |> Repo.insert()
   end
 
-    @doc """
+  @doc """
   Updates a user.
 
   ## Examples

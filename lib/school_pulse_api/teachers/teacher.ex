@@ -17,7 +17,7 @@ defmodule SchoolPulseApi.Teachers.Teacher do
           binding: :users,
           field: :email,
           ecto_type: :string
-        ] 
+        ]
       ]
     ]
   }
@@ -25,7 +25,8 @@ defmodule SchoolPulseApi.Teachers.Teacher do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "teachers" do
-
+    field :employee_number, :integer
+    field :remarks, :string
     belongs_to :position, Teachers.Position
     belongs_to :user, Accounts.User
     belongs_to :school, Schools.School
@@ -34,6 +35,6 @@ defmodule SchoolPulseApi.Teachers.Teacher do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:position_id, :user_id, :school_id])
+    |> cast(attrs, [:employee_number, :remarks, :position_id, :user_id, :school_id])
   end
 end

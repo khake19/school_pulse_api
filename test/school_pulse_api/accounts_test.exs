@@ -21,7 +21,11 @@ defmodule SchoolPulseApi.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{first_name: "some first_name", last_name: "some last_name", email: "some email"}
+      valid_attrs = %{
+        first_name: "some first_name",
+        last_name: "some last_name",
+        email: "some email"
+      }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.first_name == "some first_name"
@@ -35,7 +39,12 @@ defmodule SchoolPulseApi.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{first_name: "some updated first_name", last_name: "some updated last_name", email: "some updated email"}
+
+      update_attrs = %{
+        first_name: "some updated first_name",
+        last_name: "some updated last_name",
+        email: "some updated email"
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.first_name == "some updated first_name"

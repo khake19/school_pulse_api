@@ -49,7 +49,10 @@ defmodule SchoolPulseApiWeb.PositionControllerTest do
   describe "update position" do
     setup [:create_position]
 
-    test "renders position when data is valid", %{conn: conn, position: %Position{id: id} = position} do
+    test "renders position when data is valid", %{
+      conn: conn,
+      position: %Position{id: id} = position
+    } do
       conn = put(conn, ~p"/api/positions/#{position}", position: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

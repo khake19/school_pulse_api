@@ -5,7 +5,7 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
   Renders a list of teachers.
   """
   def index(%{teachers: teachers}) do
-    { teachers, meta } = teachers
+    {teachers, meta} = teachers
 
     %{
       data: for(teacher <- teachers, do: data(teacher)),
@@ -29,11 +29,14 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
       },
       first_name: teacher.user.first_name,
       last_name: teacher.user.last_name,
-      email: teacher.user.email
+      email: teacher.user.email,
+      gender: teacher.user.gender,
+      employee_number: teacher.employee_number,
+      remarks: teacher.remarks
     }
   end
 
-  # make this globally
+  # TODO:  make this globally
   defp meta_data(meta) do
     %{
       current_page: meta.current_page,

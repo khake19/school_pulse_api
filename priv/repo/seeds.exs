@@ -18,112 +18,115 @@ alias SchoolPulseApi.Schools.School
 alias SchoolPulseApi.Teachers.Teacher
 alias SchoolPulseApi.Teachers.Position
 
-Repo.insert!(%User{first_name: "test", email: "test@schoolpulse.com", password: Argon2.hash_pwd_salt("test123")})
+Repo.insert!(%User{
+  first_name: "test",
+  email: "test@schoolpulse.com",
+  password: Argon2.hash_pwd_salt("test123")
+})
 
 schools = [
   "Aroroy East Central School",
-  "Balawing Elementary School" ,
+  "Balawing Elementary School",
   "Balete Elementary School",
   "Bienvinido R. Bulalacao Memorial Elementary School",
   "Cabangcalan Elementary School",
   "Capsay Elementary School",
   "Concepcion Elementary School",
   "Lanang Elementary School",
-  "Luy-a Elementary School" ,
+  "Luy-a Elementary School",
   "Malubi Elementary School",
   "Managanaga Elementary School"
 ]
 
-Enum.map(schools, &(Repo.insert!(%School{name: &1})))
+Enum.map(schools, &Repo.insert!(%School{name: &1}))
 
 positions = [
   %{
-    name: 'Teacher I',
-    salary_grade: 'SG11',
-    type: 'teaching'
+    name: ~c"Teacher I",
+    salary_grade: ~c"SG11",
+    type: ~c"teaching"
   },
   %{
-    name: 'Teacher II',
-    salary_grade: 'SG12',
-    type: 'teaching'
+    name: ~c"Teacher II",
+    salary_grade: ~c"SG12",
+    type: ~c"teaching"
   },
   %{
-    name: 'Teacher III',
-    salary_grade: 'SG13',
-    type: 'teaching'
+    name: ~c"Teacher III",
+    salary_grade: ~c"SG13",
+    type: ~c"teaching"
   },
   %{
-    name: 'Master Teacher I',
-    salary_grade: 'SG18',
-    type: 'teaching'
+    name: ~c"Master Teacher I",
+    salary_grade: ~c"SG18",
+    type: ~c"teaching"
   },
   %{
-    name: 'Master Teacher II',
-    salary_grade: 'SG19',
-    type: 'teaching'
+    name: ~c"Master Teacher II",
+    salary_grade: ~c"SG19",
+    type: ~c"teaching"
   },
   %{
-    name: 'Master Teacher III',
-    salary_grade: 'SG20',
-    type: 'teaching'
+    name: ~c"Master Teacher III",
+    salary_grade: ~c"SG20",
+    type: ~c"teaching"
   },
   %{
-    name: 'Head teacher I',
-    salary_grade: 'SG14',
-    type: 'administrative'
+    name: ~c"Head teacher I",
+    salary_grade: ~c"SG14",
+    type: ~c"administrative"
   },
   %{
-    name: 'Head teacher II',
-    salary_grade: 'SG15',
-    type: 'administrative'
+    name: ~c"Head teacher II",
+    salary_grade: ~c"SG15",
+    type: ~c"administrative"
   },
   %{
-    name: 'Head teacher III',
-    salary_grade: 'SG16',
-    type: 'administrative'
+    name: ~c"Head teacher III",
+    salary_grade: ~c"SG16",
+    type: ~c"administrative"
   },
   %{
-    name: 'Principal I',
-    salary_grade: 'SG19',
-    type: 'administrative'
+    name: ~c"Principal I",
+    salary_grade: ~c"SG19",
+    type: ~c"administrative"
   },
   %{
-    name: 'Principal II',
-    salary_grade: 'SG20',
-    type: 'administrative'
+    name: ~c"Principal II",
+    salary_grade: ~c"SG20",
+    type: ~c"administrative"
   },
   %{
-    name: 'Principal III',
-    salary_grade: 'SG21',
-    type: 'administrative'
+    name: ~c"Principal III",
+    salary_grade: ~c"SG21",
+    type: ~c"administrative"
   },
   %{
-    name: 'Principal IV',
-    salary_grade: 'SG22',
-    type: 'administrative'
+    name: ~c"Principal IV",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
   },
   %{
-    name: 'District supervisor',
-    salary_grade: 'SG22',
-    type: 'administrative'
+    name: ~c"District supervisor",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
   },
   %{
-    name: 'Education supervisor I',
-    salary_grade: 'SG22',
-    type: 'administrative',
+    name: ~c"Education supervisor I",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
   },
   %{
-    name: 'Schools division superintendent I',
-    salary_grade: 'SG26',
-    type: 'executive',
-  },
+    name: ~c"Schools division superintendent I",
+    salary_grade: ~c"SG26",
+    type: ~c"executive"
+  }
 ]
 
-
-
-Enum.map(positions, fn position ->(Repo.insert!(%Position{
-  name: List.to_string(position.name),
-  salary_grade: List.to_string(position.salary_grade),
-  type: List.to_string(position.type)
-  })) end
-)
+Enum.map(positions, fn position ->
+  Repo.insert!(%Position{
+    name: List.to_string(position.name),
+    salary_grade: List.to_string(position.salary_grade),
+    type: List.to_string(position.type)
+  })
+end)

@@ -7,6 +7,7 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
     sub = to_string(id)
     {:ok, sub}
   end
+
   def subject_for_token(_, _) do
     {:error, :no_id_provided}
   end
@@ -24,7 +25,9 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
 
   def authenticate(email, password) do
     case Accounts.get_account_by_email(email) do
-      nil -> {:error, :unauthorized}
+      nil ->
+        {:error, :unauthorized}
+
       account ->
         case validate_password(password, account.password) do
           true -> create_token(account)

@@ -69,7 +69,8 @@ config :guardian, Guardian.DB,
   schema_name: "guardian_tokens",
   sweep_interval: 60
 
-config :flop, repo: SchoolPulseApi.Repo,
+config :flop,
+  repo: SchoolPulseApi.Repo,
   default_limit: 5
 
 # Import environment specific config. This must remain at the bottom

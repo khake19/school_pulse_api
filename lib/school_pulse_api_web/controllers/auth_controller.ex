@@ -7,7 +7,7 @@ defmodule SchoolPulseApiWeb.AuthController do
 
   def sign_up(conn, %{"user" => user_params}) do
     with {:ok, %User{} = account} <- Accounts.create_user(user_params),
-          {:ok, token, _claims} <- Guardian.encode_and_sign(account) do
+         {:ok, token, _claims} <- Guardian.encode_and_sign(account) do
       conn
       |> put_status(:created)
       |> render(:account_token, account: account, token: token)
@@ -20,23 +20,29 @@ defmodule SchoolPulseApiWeb.AuthController do
         conn
         |> put_status(:ok)
         |> render(:account_token, %{account: account, token: token})
-      {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Email or password incorrect"
+
+      {:error, :unauthorized} ->
+        raise ErrorResponse.Unauthorized, message: "Email or password incorrect"
     end
   end
 
   def refresh_token(conn, %{}) do
     old_token = Guardian.Plug.current_token(conn)
+
     case Guardian.decode_and_verify(old_token) do
       {:ok, claims} ->
         case Guardian.resource_from_claims(claims) do
           {:ok, account} ->
             {:ok, _old, {new_token, _new_claims}} = Guardian.refresh(old_token)
+
             conn
             |> put_status(:ok)
             |> render(:account_token, %{account: account, token: new_token})
+
           {:error, _reason} ->
             raise ErrorResponse.NotFound
         end
+
       {:error, _reason} ->
         raise ErrorResponse.NotFound
     end
@@ -46,6 +52,7 @@ defmodule SchoolPulseApiWeb.AuthController do
     account = conn.assigns[:account]
     token = Guardian.Plug.current_token(conn)
     Guardian.revoke(token)
+
     conn
     |> put_status(:ok)
     |> render(:account_token, %{account: account, token: token})

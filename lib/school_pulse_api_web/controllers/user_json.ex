@@ -23,5 +23,4 @@ defmodule SchoolPulseApiWeb.UserJSON do
       email: user.email
     }
   end
-
 end
