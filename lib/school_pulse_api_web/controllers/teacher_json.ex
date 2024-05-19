@@ -1,5 +1,6 @@
 defmodule SchoolPulseApiWeb.TeacherJSON do
   alias SchoolPulseApi.Teachers.Teacher
+  alias SchoolPulseApi.Avatar
 
   @doc """
   Renders a list of teachers.
@@ -32,7 +33,8 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
       email: teacher.user.email,
       gender: teacher.user.gender,
       employee_number: teacher.employee_number,
-      remarks: teacher.remarks
+      remarks: teacher.remarks,
+      avatar: Avatar.url({teacher.user.avatar, teacher.user})
     }
   end
 
