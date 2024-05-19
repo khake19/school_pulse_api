@@ -50,7 +50,9 @@ defmodule SchoolPulseApi.MixProject do
       {:guardian, "~> 2.3.1"},
       {:guardian_db, "~> 2.0"},
       {:argon2_elixir, "~> 3.0"},
-      {:flop, "~> 0.25.0"}
+      {:flop, "~> 0.25.0"},
+      {:waffle, "~> 1.1"},
+      {:waffle_ecto, "~> 0.0"}
     ]
   end
 

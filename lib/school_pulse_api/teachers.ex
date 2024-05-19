@@ -18,7 +18,7 @@ defmodule SchoolPulseApi.Teachers do
 
   """
   @spec list_teachers(map) ::
-          {:ok, {[Pet.t()], Flop.Meta.t()}} | {:error, Flop.Meta.t()}
+          {:ok, {[Teacher.t()], Flop.Meta.t()}} | {:error, Flop.Meta.t()}
   def list_teachers(school_id, params \\ %{}) do
     Teacher
     |> where([t], t.school_id == ^school_id)

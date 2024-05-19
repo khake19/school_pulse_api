@@ -2,6 +2,7 @@ defmodule SchoolPulseApi.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias SchoolPulseApi.Teachers
+  use Waffle.Ecto.Schema
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,6 +13,7 @@ defmodule SchoolPulseApi.Accounts.User do
     field :username, :string
     field :password, :string
     field :gender, :string
+    field :avatar, SchoolPulseApi.Avatar.Type
 
     has_one :teacher, Teachers.Teacher, foreign_key: :user_id
 
@@ -30,6 +32,7 @@ defmodule SchoolPulseApi.Accounts.User do
   def account_no_password_changeset(user, attrs) do
     user
     |> cast(attrs, [:first_name, :last_name, :email, :gender])
+    |> cast_attachments(attrs, [:avatar])
     |> validate_required([:email])
     |> unique_constraint(:email)
   end

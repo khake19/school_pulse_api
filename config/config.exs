@@ -73,6 +73,12 @@ config :flop,
   repo: SchoolPulseApi.Repo,
   default_limit: 5
 
+config :waffle,
+  storage: Waffle.Storage.Local,
+  # Edit this path to match your storage directory
+  storage_dir_prefix: "priv/static",
+  storage_dir: "images"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
