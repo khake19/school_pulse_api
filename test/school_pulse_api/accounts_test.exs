@@ -69,4 +69,56 @@ defmodule SchoolPulseApi.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end
+
+  describe "documents" do
+    alias SchoolPulseApi.Accounts.Document
+
+    import SchoolPulseApi.AccountsFixtures
+
+    @invalid_attrs %{}
+
+    test "list_documents/0 returns all documents" do
+      document = document_fixture()
+      assert Accounts.list_documents() == [document]
+    end
+
+    test "get_document!/1 returns the document with given id" do
+      document = document_fixture()
+      assert Accounts.get_document!(document.id) == document
+    end
+
+    test "create_document/1 with valid data creates a document" do
+      valid_attrs = %{}
+
+      assert {:ok, %Document{} = document} = Accounts.create_document(valid_attrs)
+    end
+
+    test "create_document/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_document(@invalid_attrs)
+    end
+
+    test "update_document/2 with valid data updates the document" do
+      document = document_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %Document{} = document} = Accounts.update_document(document, update_attrs)
+    end
+
+    test "update_document/2 with invalid data returns error changeset" do
+      document = document_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_document(document, @invalid_attrs)
+      assert document == Accounts.get_document!(document.id)
+    end
+
+    test "delete_document/1 deletes the document" do
+      document = document_fixture()
+      assert {:ok, %Document{}} = Accounts.delete_document(document)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_document!(document.id) end
+    end
+
+    test "change_document/1 returns a document changeset" do
+      document = document_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_document(document)
+    end
+  end
 end

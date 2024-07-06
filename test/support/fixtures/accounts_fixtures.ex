@@ -24,4 +24,18 @@ defmodule SchoolPulseApi.AccountsFixtures do
 
     user
   end
+
+  @doc """
+  Generate a document.
+  """
+  def document_fixture(attrs \\ %{}) do
+    {:ok, document} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> SchoolPulseApi.Accounts.create_document()
+
+    document
+  end
 end

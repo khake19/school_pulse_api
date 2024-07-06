@@ -2,7 +2,7 @@ defmodule SchoolPulseApi.FileUploader do
   use Waffle.Definition
 
   # Include ecto support (requires package waffle_ecto installed):
-  # use Waffle.Ecto.Definition
+  use Waffle.Ecto.Definition
 
   @versions [:original]
   @extensions ~w(.jpg .jpeg .png .pdf)
@@ -40,14 +40,14 @@ defmodule SchoolPulseApi.FileUploader do
   end
 
   # Override the storage directory:
-  # def storage_dir(version, {file, scope}) do
-  #   "uploads/user/avatars/#{scope.id}"
-  # end
+  def storage_dir(_version, {_file, scope}) do
+    "uploads/user/documents/#{scope.id}"
+  end
 
   # Provide a default URL if there hasn't been a file uploaded
-  # def default_url(version, scope) do
-  #   "/images/avatars/default_#{version}.png"
-  # end
+  def default_url(version, _scope) do
+    "/images/avatars/default_#{version}.png"
+  end
 
   # Specify custom headers for s3 objects
   # Available options are [:cache_control, :content_disposition,

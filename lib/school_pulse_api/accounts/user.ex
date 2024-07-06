@@ -1,6 +1,7 @@
 defmodule SchoolPulseApi.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Teachers
   use Waffle.Ecto.Schema
 
@@ -16,6 +17,7 @@ defmodule SchoolPulseApi.Accounts.User do
     field :avatar, SchoolPulseApi.Avatar.Type
 
     has_one :teacher, Teachers.Teacher, foreign_key: :user_id
+    has_many :documents, Accounts.Document, foreign_key: :user_id
 
     timestamps()
   end

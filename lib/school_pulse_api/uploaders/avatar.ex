@@ -4,8 +4,6 @@ defmodule SchoolPulseApi.Avatar do
   # Include ecto support (requires package waffle_ecto installed):
   use Waffle.Ecto.Definition
 
-  @versions [:original]
-
   # To add a thumbnail version:
   @versions [:original, :thumb]
 

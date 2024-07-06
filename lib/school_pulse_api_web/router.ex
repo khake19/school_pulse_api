@@ -31,6 +31,7 @@ defmodule SchoolPulseApiWeb.Router do
 
     resources "/schools", SchoolController do
       resources "/teachers", TeacherController
+      resources "/documents", DocumentController
     end
 
     get "/positions", PositionController, :index
