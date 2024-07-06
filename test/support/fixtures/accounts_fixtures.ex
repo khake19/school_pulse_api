@@ -31,9 +31,7 @@ defmodule SchoolPulseApi.AccountsFixtures do
   def document_fixture(attrs \\ %{}) do
     {:ok, document} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> SchoolPulseApi.Accounts.create_document()
 
     document

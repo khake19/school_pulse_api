@@ -5,12 +5,8 @@ defmodule SchoolPulseApiWeb.DocumentControllerTest do
 
   alias SchoolPulseApi.Accounts.Document
 
-  @create_attrs %{
-
-  }
-  @update_attrs %{
-
-  }
+  @create_attrs %{}
+  @update_attrs %{}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -45,7 +41,10 @@ defmodule SchoolPulseApiWeb.DocumentControllerTest do
   describe "update document" do
     setup [:create_document]
 
-    test "renders document when data is valid", %{conn: conn, document: %Document{id: id} = document} do
+    test "renders document when data is valid", %{
+      conn: conn,
+      document: %Document{id: id} = document
+    } do
       conn = put(conn, ~p"/api/documents/#{document}", document: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

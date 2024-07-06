@@ -98,6 +98,9 @@ defmodule SchoolPulseApi.Accounts do
 
   """
   def update_user_no_credential(%User{} = user, attrs) do
+    require IEx
+    IEx.pry()
+
     user
     |> User.account_no_password_changeset(attrs)
     |> Repo.update()

@@ -14,7 +14,8 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
   def create(conn, %{"document" => document_params}) do
     account = Guardian.Plug.current_resource(conn)
-    file = FileUploader.store({document_params["file"], account})
+    FileUploader.store({document_params["file"], account})
+
     with {:ok, %Document{} = document} <- Accounts.create_document(document_params) do
       conn
       |> put_status(:created)

@@ -43,7 +43,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
 
   def update(conn, %{"school_id" => school_id, "id" => id, "teacher" => teacher_params}) do
     account = Guardian.Plug.current_resource(conn)
-    avatar = Avatar.store({teacher_params["avatar"], account})
+    Avatar.store({teacher_params["avatar"], account})
 
     teacher = Teachers.get_teacher!(id)
     user = Accounts.get_user!(teacher.user_id)
@@ -57,8 +57,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
              school_id: school.id,
              position_id: position.id,
              employee_number: teacher_params["employee_number"],
-             remarks: teacher_params["remarks"],
-             avatar: avatar
+             remarks: teacher_params["remarks"]
            }) do
       teacher = teacher |> Repo.preload([:position, :user])
       render(conn, :show, teacher: teacher)
