@@ -22,7 +22,8 @@ defmodule SchoolPulseApiWeb.DocumentController do
     with {:ok, %Document{} = document} <-
            Accounts.create_document(%{
              file: document_params["file"],
-             user_id: teacher.user.id
+             user_id: teacher.user.id,
+             type: document_params["document_type"]
            }) do
       conn
       |> put_status(:created)
