@@ -1,9 +1,11 @@
 defmodule SchoolPulseApiWeb.DocumentController do
   use SchoolPulseApiWeb, :controller
 
+  alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Accounts.Document
   alias SchoolPulseApi.FileUploader
+  alias SchoolPulseApi.Teachers
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -14,9 +16,14 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
   def create(conn, %{"document" => document_params}) do
     account = Guardian.Plug.current_resource(conn)
+    teacher = Teachers.get_teacher!(document_params["teacher_id"]) |> Repo.preload([:user])
     FileUploader.store({document_params["file"], account})
 
-    with {:ok, %Document{} = document} <- Accounts.create_document(document_params) do
+    with {:ok, %Document{} = document} <-
+           Accounts.create_document(%{
+             file: document_params["file"],
+             user_id: teacher.user.id
+           }) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/documents/#{document}")

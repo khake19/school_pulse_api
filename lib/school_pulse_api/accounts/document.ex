@@ -24,9 +24,8 @@ defmodule SchoolPulseApi.Accounts.Document do
   @doc false
   def changeset(document, attrs) do
     document
-    |> cast(attrs, [:type])
+    |> cast(attrs, [:type, :user_id])
     |> cast_attachments(attrs, [:file])
-
-    # |> validate_required([:type])
+    |> validate_required([:user_id])
   end
 end
