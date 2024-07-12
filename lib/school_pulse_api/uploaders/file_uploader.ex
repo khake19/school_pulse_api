@@ -41,7 +41,7 @@ defmodule SchoolPulseApi.FileUploader do
 
   # Override the storage directory:
   def storage_dir(_version, {_file, scope}) do
-    "uploads/user/documents/#{scope.id}"
+    "images/documents/#{scope.id}"
   end
 
   # Provide a default URL if there hasn't been a file uploaded
