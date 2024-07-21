@@ -32,7 +32,6 @@ defmodule SchoolPulseApiWeb.DocumentController do
              user_id: teacher.user.id,
              document_type_id: serial.id,
              size: stat.size,
-             filename: document_params["file"].filename,
              content_type: document_params["file"].content_type
            }) do
       FileUploader.store({document_params["file"], document})

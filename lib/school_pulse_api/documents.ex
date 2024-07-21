@@ -29,7 +29,7 @@ defmodule SchoolPulseApi.Documents do
 
     query
     |> order_by([t], desc: t.inserted_at)
-    |> preload([:user])
+    |> preload([:user, :document_type])
     |> Flop.validate_and_run(params, for: Document)
   end
 
@@ -62,6 +62,13 @@ defmodule SchoolPulseApi.Documents do
     %Document{}
     |> Document.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, document} ->
+        {:ok, Repo.preload(document, [:user, :document_type])}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

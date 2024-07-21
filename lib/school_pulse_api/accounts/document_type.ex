@@ -14,7 +14,7 @@ defmodule SchoolPulseApi.Accounts.DocumentType do
   @doc false
   def changeset(school, attrs) do
     school
-    |> cast(attrs, [:name, :integer])
-    |> validate_required([:name, :integer])
+    |> cast(attrs, [:name, :serial_id])
+    |> validate_required([:name, :serial_id])
   end
 end

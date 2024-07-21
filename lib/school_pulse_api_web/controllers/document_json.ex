@@ -20,9 +20,13 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
   defp data(%Document{} = document) do
     %{
       id: document.id,
-      # document_type: document.type,
-      file: FileUploader.url({document.path, document}),
-      name: ~c""
+      path: FileUploader.url({document.path, document}),
+      filename: document.path.file_name,
+      size: document.size,
+      content_type: document.content_type,
+      document_type: document.document_type.name,
+      inserted_at: document.inserted_at,
+      updated_at: document.updated_at
     }
   end
 

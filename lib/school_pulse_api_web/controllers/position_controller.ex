@@ -15,7 +15,6 @@ defmodule SchoolPulseApiWeb.PositionController do
     with {:ok, %Position{} = position} <- Teachers.create_position(position_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/positions/#{position}")
       |> render(:show, position: position)
     end
   end

@@ -140,6 +140,10 @@ document_types = [
   %{
     serial_id: 2,
     name: ~c"Passport"
+  },
+  %{
+    serial_id: 3,
+    name: ~c"PRC ID"
   }
 ]
 

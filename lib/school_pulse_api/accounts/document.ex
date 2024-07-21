@@ -13,7 +13,6 @@ defmodule SchoolPulseApi.Accounts.Document do
   @foreign_key_type :binary_id
   schema "documents" do
     field :path, SchoolPulseApi.FileUploader.Type
-    field :filename, :string
     field :size, :integer
     field :content_type, :string
     belongs_to :user, Accounts.User
@@ -33,8 +32,8 @@ defmodule SchoolPulseApi.Accounts.Document do
   @doc false
   def changeset(document, attrs) do
     document
-    |> cast(attrs, [:user_id, :document_type_id, :filename, :size, :content_type])
+    |> cast(attrs, [:user_id, :document_type_id, :size, :content_type])
     |> cast_attachments(attrs, [:path])
-    |> validate_required([:user_id])
+    |> validate_required([:user_id, :document_type_id])
   end
 end

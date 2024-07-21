@@ -13,13 +13,12 @@ defmodule SchoolPulseApi.Repo.Migrations.CreateDocuments do
       add :document_type_id, references(:document_types, on_delete: :nothing, type: :binary_id)
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :path, :string
-      add :filename, :string
       add :size, :integer
       add :content_type, :string
 
       timestamps()
     end
 
-    create index(:documents, [:user_id, :document_type_id])
+    create index(:documents, [:user_id])
   end
 end
