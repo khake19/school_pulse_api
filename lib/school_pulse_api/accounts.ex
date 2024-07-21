@@ -7,7 +7,6 @@ defmodule SchoolPulseApi.Accounts do
   alias SchoolPulseApi.Repo
 
   alias SchoolPulseApi.Accounts.User
-  alias SchoolPulseApi.Accounts.Document
 
   @doc """
   Returns the list of users.
@@ -148,96 +147,5 @@ defmodule SchoolPulseApi.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
-  end
-
-  @doc """
-  Returns the list of documents.
-
-  ## Examples
-
-      iex> list_documents()
-      [%Document{}, ...]
-
-  """
-  def list_documents do
-    Repo.all(Document)
-  end
-
-  @doc """
-  Gets a single document.
-
-  Raises if the Document does not exist.
-
-  ## Examples
-
-      iex> get_document!(123)
-      %Document{}
-
-  """
-  def get_document!(id), do: Repo.get!(Document, id)
-
-  @doc """
-  Creates a document.
-
-  ## Examples
-
-      iex> create_document(%{field: value})
-      {:ok, %Document{}}
-
-      iex> create_document(%{field: bad_value})
-      {:error, ...}
-
-  """
-  def create_document(attrs \\ %{}) do
-    %Document{}
-    |> Document.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a document.
-
-  ## Examples
-
-      iex> update_document(document, %{field: new_value})
-      {:ok, %Document{}}
-
-      iex> update_document(document, %{field: bad_value})
-      {:error, ...}
-
-  """
-  def update_document(%Document{} = document, attrs) do
-    document
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Document.
-
-  ## Examples
-
-      iex> delete_document(document)
-      {:ok, %Document{}}
-
-      iex> delete_document(document)
-      {:error, ...}
-
-  """
-  def delete_document(%Document{} = document) do
-    Repo.delete(document)
-  end
-
-  @doc """
-  Returns a data structure for tracking document changes.
-
-  ## Examples
-
-      iex> change_document(document)
-      %Todo{...}
-
-  """
-  def change_document(%Document{} = document, attrs \\ %{}) do
-    Document.changeset(document, attrs)
   end
 end

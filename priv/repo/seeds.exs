@@ -13,6 +13,7 @@
 alias SchoolPulseApi.Repo
 alias SchoolPulseApi.Accounts
 alias SchoolPulseApi.Accounts.User
+alias SchoolPulseApi.Accounts.DocumentType
 alias SchoolPulseApi.Schools
 alias SchoolPulseApi.Schools.School
 alias SchoolPulseApi.Teachers.Teacher
@@ -128,5 +129,23 @@ Enum.map(positions, fn position ->
     name: List.to_string(position.name),
     salary_grade: List.to_string(position.salary_grade),
     type: List.to_string(position.type)
+  })
+end)
+
+document_types = [
+  %{
+    serial_id: 1,
+    name: ~c"Tax Identification Number"
+  },
+  %{
+    serial_id: 2,
+    name: ~c"Passport"
+  }
+]
+
+Enum.map(document_types, fn document_type ->
+  Repo.insert!(%DocumentType{
+    name: List.to_string(document_type.name),
+    serial_id: document_type.serial_id
   })
 end)

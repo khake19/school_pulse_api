@@ -4,12 +4,21 @@ defmodule SchoolPulseApi.Accounts.Document do
   alias SchoolPulseApi.Accounts
   use Waffle.Ecto.Schema
 
+  @derive {
+    Flop.Schema,
+    filterable: [:path], sortable: [:path]
+  }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "documents" do
-    field :type, :integer
-    field :file, SchoolPulseApi.FileUploader.Type
+    field :path, SchoolPulseApi.FileUploader.Type
+    field :filename, :string
+    field :size, :integer
+    field :content_type, :string
     belongs_to :user, Accounts.User
+    belongs_to :document_type, Accounts.DocumentType
+
     timestamps()
   end
 
@@ -24,8 +33,8 @@ defmodule SchoolPulseApi.Accounts.Document do
   @doc false
   def changeset(document, attrs) do
     document
-    |> cast(attrs, [:type, :user_id])
-    |> cast_attachments(attrs, [:file])
+    |> cast(attrs, [:user_id, :document_type_id, :filename, :size, :content_type])
+    |> cast_attachments(attrs, [:path])
     |> validate_required([:user_id])
   end
 end
