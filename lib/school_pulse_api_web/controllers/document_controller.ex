@@ -24,21 +24,40 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
     {:ok, stat} = File.lstat(document_params["file"].path)
 
-    serial = Documents.get_document_by_serial_id!(document_params["document_type"])
+    document_type = Documents.get_document_type_by_serial_id!(document_params["document_type"])
 
-    with {:ok, %Document{} = document} <-
-           Documents.create_document(%{
-             path: document_params["file"],
-             user_id: teacher.user.id,
-             document_type_id: serial.id,
-             size: stat.size,
-             content_type: document_params["file"].content_type
-           }) do
-      FileUploader.store({document_params["file"], document})
+    case Documents.get_document_by_user_and_type(teacher.user.id, document_type.id) do
+      nil ->
+        case Documents.create_document(%{
+               path: document_params["file"],
+               user_id: teacher.user.id,
+               document_type_id: document_type.id,
+               size: stat.size,
+               content_type: document_params["file"].content_type
+             }) do
+          {:ok, %Document{} = document} ->
+            FileUploader.store({document_params["file"], document})
 
-      conn
-      |> put_status(:created)
-      |> render(:show, document: document)
+            conn
+            |> put_status(:created)
+            |> render(:show, document: document)
+        end
+
+      document ->
+        case Documents.update_document(document, %{
+               path: document_params["file"],
+               user_id: teacher.user.id,
+               document_type_id: document_type.id,
+               size: stat.size,
+               content_type: document_params["file"].content_type
+             }) do
+          {:ok, %Document{} = document} ->
+            FileUploader.store({document_params["file"], document})
+
+            conn
+            |> put_status(:created)
+            |> render(:show, document: document)
+        end
     end
   end
 

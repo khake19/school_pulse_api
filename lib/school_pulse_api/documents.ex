@@ -5,8 +5,6 @@ defmodule SchoolPulseApi.Documents do
 
   import Ecto.Query, warn: false
   alias SchoolPulseApi.Repo
-
-  alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Accounts.Document
   alias SchoolPulseApi.Accounts.DocumentType
 
@@ -85,8 +83,14 @@ defmodule SchoolPulseApi.Documents do
   """
   def update_document(%Document{} = document, attrs) do
     document
-    |> User.changeset(attrs)
+    |> Document.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, document} ->
+        {:ok, Repo.preload(document, [:user, :document_type])}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -118,5 +122,13 @@ defmodule SchoolPulseApi.Documents do
     Document.changeset(document, attrs)
   end
 
-  def get_document_by_serial_id!(serial_id), do: Repo.get_by!(DocumentType, serial_id: serial_id)
+  def get_document_by_user_and_type(user_id, type_id) do
+    query =
+      from d in Document,
+        where: d.user_id == ^user_id and d.document_type_id == ^type_id
+    Repo.one(query)
+  end
+
+  def get_document_type_by_serial_id!(serial_id),
+    do: Repo.get_by!(DocumentType, serial_id: serial_id)
 end
