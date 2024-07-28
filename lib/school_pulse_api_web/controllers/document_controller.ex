@@ -77,6 +77,8 @@ defmodule SchoolPulseApiWeb.DocumentController do
   def delete(conn, %{"id" => id}) do
     document = Documents.get_document!(id)
 
+    FileUploader.delete({document.path, document})
+
     with {:ok, %Document{}} <- Documents.delete_document(document) do
       send_resp(conn, :no_content, "")
     end
