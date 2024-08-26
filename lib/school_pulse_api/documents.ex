@@ -88,6 +88,7 @@ defmodule SchoolPulseApi.Documents do
     |> case do
       {:ok, document} ->
         {:ok, Repo.preload(document, [:user, :document_type])}
+
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -126,6 +127,7 @@ defmodule SchoolPulseApi.Documents do
     query =
       from d in Document,
         where: d.user_id == ^user_id and d.document_type_id == ^type_id
+
     Repo.one(query)
   end
 
