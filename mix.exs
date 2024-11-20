@@ -52,7 +52,9 @@ defmodule SchoolPulseApi.MixProject do
       {:argon2_elixir, "~> 3.0"},
       {:flop, "~> 0.25.0"},
       {:waffle, "~> 1.1"},
-      {:waffle_ecto, "~> 0.0"}
+      {:waffle_ecto, "~> 0.0"},
+      {:elixlsx, "~> 0.6.0"},
+      {:xlsx_reader, "~> 0.8.0"}
     ]
   end
 
