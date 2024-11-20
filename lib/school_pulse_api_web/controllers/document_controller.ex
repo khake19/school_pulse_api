@@ -10,8 +10,8 @@ defmodule SchoolPulseApiWeb.DocumentController do
   action_fallback SchoolPulseApiWeb.FallbackController
 
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
-  def index(conn, _params) do
-    with {:ok, result} <- Documents.list_documents() do
+  def index(conn, %{"school_id" => school_id}) do
+    with {:ok, result} <- Documents.list_documents(school_id, conn.query_params) do
       render(conn, :index, documents: result)
     end
   end

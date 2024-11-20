@@ -7,6 +7,9 @@ defmodule SchoolPulseApi.Documents do
   alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Accounts.Document
   alias SchoolPulseApi.Accounts.DocumentType
+  alias SchoolPulseApi.Accounts.User
+  alias SchoolPulseApi.Teachers.Teacher
+  alias SchoolPulseApi.Schools.School
 
   @doc """
   Returns the list of documents.
@@ -17,16 +20,17 @@ defmodule SchoolPulseApi.Documents do
       [%Document{}, ...]
 
   """
-  def list_documents(user_id \\ nil, params \\ %{}) do
+  def list_documents(school_id \\ nil, params \\ %{}) do
+
     query =
-      if is_nil(user_id) do
-        from(t in Document)
-      else
-        from t in Document, where: t.user_id == ^user_id
-      end
+      from d in Document,
+        join: u in User, on: u.id == d.user_id,
+        join: t in Teacher, on: t.user_id == u.id,
+        join: s in School, on: s.id == t.school_id,
+        where: s.id == ^school_id
 
     query
-    |> order_by([t], desc: t.inserted_at)
+    |> order_by([d], desc: d.inserted_at)
     |> preload([:user, :document_type])
     |> Flop.validate_and_run(params, for: Document)
   end

@@ -26,7 +26,13 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
       content_type: document.content_type,
       document_type: document.document_type.name,
       inserted_at: document.inserted_at,
-      updated_at: document.updated_at
+      updated_at: document.updated_at,
+      user: %{
+        email: document.user.email,
+        first_name: document.user.first_name,
+        last_name: document.user.last_name,
+        avatar: FileUploader.url({document.user.avatar, document.user})
+      }
     }
   end
 
