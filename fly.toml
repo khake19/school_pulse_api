@@ -9,6 +9,10 @@ kill_signal = 'SIGTERM'
 
 [build]
 
+[mounts]
+  source="school_pulse"
+  destination="/priv/static/images"
+
 [deploy]
   release_command = '/app/bin/migrate'
 
