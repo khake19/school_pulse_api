@@ -10,6 +10,12 @@ config :school_pulse_api, SchoolPulseApi.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :waffle,
+  storage: Waffle.Storage.Local,
+  # Edit this path to match your storage directory
+  storage_dir_prefix: "priv/static",
+  storage_dir: "images"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

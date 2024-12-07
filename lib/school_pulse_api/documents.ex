@@ -68,15 +68,24 @@ defmodule SchoolPulseApi.Documents do
 
   """
   def create_document(attrs \\ %{}) do
-    %Document{}
-    |> Document.changeset(attrs)
-    |> Repo.insert()
-    |> case do
-      {:ok, document} ->
-        {:ok, Repo.preload(document, [:user, :document_type])}
+    # %Document{}
+    # |> Document.changeset(attrs)
+    # |> Repo.insert()
+    # |> case do
+    #   {:ok, document} ->
+    #     {:ok, Repo.preload(document, [:user, :document_type])}
 
-      {:error, changeset} ->
-        {:error, changeset}
+    #   {:error, changeset} ->
+    #     {:error, changeset}
+    # end
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:document, Document.changeset(%Document{}, attrs))
+    |> Ecto.Multi.update(:document_with_file, &Document.file_changeset(&1.document, attrs))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{document_with_file: document}} -> {:ok, Repo.preload(document, [:user, :document_type])}
+      {:error, _, changeset, _} -> {:error, changeset}
     end
   end
 
@@ -95,6 +104,7 @@ defmodule SchoolPulseApi.Documents do
   def update_document(%Document{} = document, attrs) do
     document
     |> Document.changeset(attrs)
+    |> Document.file_changeset(attrs)
     |> Repo.update()
     |> case do
       {:ok, document} ->

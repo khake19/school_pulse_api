@@ -3,9 +3,9 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
   alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Accounts.Document
-  alias SchoolPulseApi.FileUploader
   alias SchoolPulseApi.Teachers
   alias SchoolPulseApi.Documents
+  alias SchoolPulseApi.FileUploader
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -36,8 +36,6 @@ defmodule SchoolPulseApiWeb.DocumentController do
                content_type: document_params["file"].content_type
              }) do
           {:ok, %Document{} = document} ->
-            FileUploader.store({document_params["file"], document})
-
             conn
             |> put_status(:created)
             |> render(:show, document: document)
@@ -52,8 +50,6 @@ defmodule SchoolPulseApiWeb.DocumentController do
                content_type: document_params["file"].content_type
              }) do
           {:ok, %Document{} = document} ->
-            FileUploader.store({document_params["file"], document})
-
             conn
             |> put_status(:created)
             |> render(:show, document: document)

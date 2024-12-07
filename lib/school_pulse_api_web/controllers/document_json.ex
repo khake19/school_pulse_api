@@ -20,7 +20,7 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
   defp data(%Document{} = document) do
     %{
       id: document.id,
-      path: FileUploader.url({document.path, document}),
+      path: FileUploader.url({document.path, document}, signed: true),
       filename: document.path.file_name,
       size: document.size,
       content_type: document.content_type,
@@ -31,7 +31,7 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
         email: document.user.email,
         first_name: document.user.first_name,
         last_name: document.user.last_name,
-        avatar: FileUploader.url({document.user.avatar, document.user})
+        avatar: FileUploader.url({document.user.avatar, document.user}, signed: true)
       }
     }
   end

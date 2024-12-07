@@ -33,7 +33,12 @@ defmodule SchoolPulseApi.Accounts.Document do
   def changeset(document, attrs) do
     document
     |> cast(attrs, [:user_id, :document_type_id, :size, :content_type])
-    |> cast_attachments(attrs, [:path])
     |> validate_required([:user_id, :document_type_id])
+  end
+
+  def file_changeset(document, attrs) do
+    document
+    |> cast_attachments(attrs, [:path])
+    |> validate_required([:path])
   end
 end
