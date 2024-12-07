@@ -8,21 +8,6 @@ import Config
 config :school_pulse_api, SchoolPulseApiWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-
-config :ex_aws,
-  json_codec: Jason,
-  access_key_id:   System.get_env("B2_ACCESS_KEY_ID"),
-  secret_access_key: System.get_env("B2_SECRET_ACCESS_KEY")
-
-config :waffle,
-  storage: Waffle.Storage.S3, # Use the S3 storage adapter
-  bucket: System.get_env("B2_BUCKET_NAME"),
-  asset_host: System.get_env("B2_ASSET_HOST")
-
-config :ex_aws, :s3,
-  scheme: "https://",
-  host: System.get_env("B2_REGION")
-
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: SchoolPulseApi.Finch
 

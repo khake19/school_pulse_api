@@ -63,6 +63,20 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :ex_aws,
+    json_codec: Jason,
+    access_key_id: System.get_env("B2_ACCESS_KEY_ID"),
+    secret_access_key: System.get_env("B2_SECRET_ACCESS_KEY")
+
+  config :waffle,
+    storage: Waffle.Storage.S3, # Use the S3 storage adapter
+    bucket: System.get_env("B2_BUCKET_NAME"),
+    asset_host: System.get_env("B2_ASSET_HOST")
+
+  config :ex_aws, :s3,
+    scheme: "https://",
+    host: System.get_env("B2_REGION")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
