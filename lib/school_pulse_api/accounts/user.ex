@@ -31,10 +31,16 @@ defmodule SchoolPulseApi.Accounts.User do
     |> put_password_hash()
   end
 
+
+  def avatar_changeset(user, attrs) do
+    user
+    |> cast_attachments(attrs, [:avatar])
+    |> validate_required([:avatar])
+  end
+
   def account_no_password_changeset(user, attrs) do
     user
     |> cast(attrs, [:first_name, :last_name, :email, :gender])
-    |> cast_attachments(attrs, [:avatar])
     |> validate_required([:email])
     |> unique_constraint(:email)
   end

@@ -79,9 +79,14 @@ defmodule SchoolPulseApi.Accounts do
 
   """
   def create_user_no_credential(attrs \\ %{}) do
-    %User{}
-    |> User.account_no_password_changeset(attrs)
-    |> Repo.insert()
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user, User.account_no_password_changeset(%User{}, attrs))
+    |> Ecto.Multi.update(:user_with_avatar, &User.avatar_changeset(&1.user, attrs))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user_with_avatar: user}} -> {:ok, user}
+      {:error, _, changeset, _} -> {:error, changeset}
+    end
   end
 
   @doc """
@@ -99,6 +104,7 @@ defmodule SchoolPulseApi.Accounts do
   def update_user_no_credential(%User{} = user, attrs) do
     user
     |> User.account_no_password_changeset(attrs)
+    |> User.avatar_changeset(attrs)
     |> Repo.update()
   end
 

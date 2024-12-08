@@ -7,7 +7,6 @@ defmodule SchoolPulseApiWeb.TeacherController do
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Schools
-  alias SchoolPulseApi.Avatar
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -42,8 +41,6 @@ defmodule SchoolPulseApiWeb.TeacherController do
   end
 
   def update(conn, %{"school_id" => school_id, "id" => id, "teacher" => teacher_params}) do
-    account = Guardian.Plug.current_resource(conn)
-    Avatar.store({teacher_params["avatar"], account})
 
     teacher = Teachers.get_teacher!(id)
     user = Accounts.get_user!(teacher.user_id)
