@@ -34,7 +34,7 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
       gender: teacher.user.gender,
       employee_number: teacher.employee_number,
       remarks: teacher.remarks,
-      avatar: Avatar.url({teacher.user.avatar, teacher.user})
+      avatar: Avatar.url({teacher.user.avatar, teacher.user}, signed: true)
     }
   end
 
