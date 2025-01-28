@@ -22,8 +22,8 @@ defmodule GlobalSetup do
     alias SchoolPulseApi.Teachers.Position
 
     Repo.insert!(%User{
-      first_name: "test",
-      email: "test@schoolpulse.com",
+      first_name: "admin",
+      email: "admin@schoolpulse.com",
       password: Argon2.hash_pwd_salt("test123")
     })
 
@@ -136,23 +136,13 @@ defmodule GlobalSetup do
 
     document_types = [
       %{
-        serial_id: 1,
-        name: ~c"Tax Identification Number"
-      },
-      %{
-        serial_id: 2,
-        name: ~c"Passport"
-      },
-      %{
-        serial_id: 3,
-        name: ~c"PRC ID"
+        name: ~c"Daily Time Record"
       }
     ]
 
     Enum.map(document_types, fn document_type ->
       Repo.insert!(%DocumentType{
-        name: List.to_string(document_type.name),
-        serial_id: document_type.serial_id
+        name: List.to_string(document_type.name)
       })
     end)
   end

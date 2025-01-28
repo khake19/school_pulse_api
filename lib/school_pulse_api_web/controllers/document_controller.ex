@@ -24,16 +24,17 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
     {:ok, stat} = File.lstat(document_params["file"].path)
 
-    document_type = Documents.get_document_type_by_serial_id!(document_params["document_type"])
+    document_type = Documents.get_document_type_by_id!(document_params["document_type"])
 
-    case Documents.get_document_by_user_and_type(teacher.user.id, document_type.id) do
+    case Documents.get_document_by_type_and_date(teacher.user.id, document_type.id, document_params["date_period"]) do
       nil ->
         case Documents.create_document(%{
                path: document_params["file"],
                user_id: teacher.user.id,
                document_type_id: document_type.id,
                size: stat.size,
-               content_type: document_params["file"].content_type
+               content_type: document_params["file"].content_type,
+               date_period: document_params["date_period"]
              }) do
           {:ok, %Document{} = document} ->
             conn
@@ -42,14 +43,17 @@ defmodule SchoolPulseApiWeb.DocumentController do
         end
 
       document ->
+        FileUploader.delete({document.path, document})
         case Documents.update_document(document, %{
                path: document_params["file"],
                user_id: teacher.user.id,
                document_type_id: document_type.id,
                size: stat.size,
-               content_type: document_params["file"].content_type
+               content_type: document_params["file"].content_type,
+               date_period: document_params["date_period"]
              }) do
           {:ok, %Document{} = document} ->
+
             conn
             |> put_status(:created)
             |> render(:show, document: document)

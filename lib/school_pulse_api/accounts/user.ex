@@ -9,6 +9,7 @@ defmodule SchoolPulseApi.Accounts.User do
   @foreign_key_type :binary_id
   schema "users" do
     field :first_name, :string
+    field :middle_name, :string
     field :last_name, :string
     field :email, :string
     field :username, :string
@@ -40,7 +41,7 @@ defmodule SchoolPulseApi.Accounts.User do
 
   def account_no_password_changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :gender])
+    |> cast(attrs, [:first_name, :middle_name, :last_name, :email, :gender])
     |> validate_required([:email])
     |> unique_constraint(:email)
   end

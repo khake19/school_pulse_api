@@ -3,14 +3,13 @@ defmodule SchoolPulseApi.Repo.Migrations.CreateDocuments do
 
   def change do
     create table(:document_types, primary_key: false) do
-      add :id, :binary_id, primary_key: true
-      add :serial_id, :integer
+      add :id, :serial, primary_key: true
       add :name, :string
     end
 
     create table(:documents, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :document_type_id, references(:document_types, on_delete: :nothing, type: :binary_id)
+      add :document_type_id, references(:document_types, on_delete: :nothing, type: :serial)
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :path, :string
       add :size, :integer

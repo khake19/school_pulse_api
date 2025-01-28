@@ -38,6 +38,7 @@ defmodule SchoolPulseApiWeb.Router do
 
     get "/auth/sign_out", AuthController, :sign_out
     get "/auth/refresh_token", AuthController, :refresh_token
+    get "/auth/me", AuthController, :me
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

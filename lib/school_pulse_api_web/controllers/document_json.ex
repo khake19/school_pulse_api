@@ -27,6 +27,7 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
       document_type: document.document_type.name,
       inserted_at: document.inserted_at,
       updated_at: document.updated_at,
+      date_period: document.date_period,
       user: %{
         email: document.user.email,
         first_name: document.user.first_name,

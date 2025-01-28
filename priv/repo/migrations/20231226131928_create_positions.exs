@@ -3,7 +3,7 @@ defmodule SchoolPulseApi.Repo.Migrations.CreatePositions do
 
   def change do
     create table(:positions, primary_key: false) do
-      add :id, :binary_id, primary_key: true
+      add :id, :serial, primary_key: true
       add :name, :string
       add :salary_grade, :string
 

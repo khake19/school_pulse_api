@@ -144,14 +144,13 @@ defmodule SchoolPulseApi.Documents do
     Document.changeset(document, attrs)
   end
 
-  def get_document_by_user_and_type(user_id, type_id) do
+  def get_document_by_type_and_date(user_id, type_id, date) do
     query =
       from d in Document,
-        where: d.user_id == ^user_id and d.document_type_id == ^type_id
-
+        where: d.user_id == ^user_id and d.document_type_id == ^type_id and d.date_period == ^date
     Repo.one(query)
   end
 
-  def get_document_type_by_serial_id!(serial_id),
-    do: Repo.get_by!(DocumentType, serial_id: serial_id)
+  def get_document_type_by_id!(id),
+    do: Repo.get_by!(DocumentType, id: id)
 end

@@ -25,9 +25,15 @@ defmodule SchoolPulseApi.Teachers.Teacher do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "teachers" do
-    field :employee_number, :integer
+    field :employee_number, :string
     field :remarks, :string
-    belongs_to :position, Teachers.Position
+    field :philhealth, :string
+    field :gsis, :string
+    field :pagibig, :string
+    field :tin, :string
+    field :plantilla, :string
+    field :date_hired, :date
+    belongs_to :position, Teachers.Position, type: :id
     belongs_to :user, Accounts.User
     belongs_to :school, Schools.School
     timestamps()
@@ -35,6 +41,17 @@ defmodule SchoolPulseApi.Teachers.Teacher do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:employee_number, :remarks, :position_id, :user_id, :school_id])
+    |> cast(attrs, [:employee_number,
+    :remarks,
+    :position_id,
+    :user_id,
+    :school_id,
+    :philhealth,
+    :gsis,
+    :pagibig,
+    :tin,
+    :plantilla,
+    :date_hired
+    ])
   end
 end

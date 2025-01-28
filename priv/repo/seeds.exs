@@ -108,19 +108,44 @@ positions = [
     type: ~c"administrative"
   },
   %{
-    name: ~c"District supervisor",
+    name: ~c"Public schools district supervisor",
     salary_grade: ~c"SG22",
     type: ~c"administrative"
   },
   %{
-    name: ~c"Education supervisor I",
+    name: ~c"Administrative aide I",
     salary_grade: ~c"SG22",
     type: ~c"administrative"
   },
   %{
-    name: ~c"Schools division superintendent I",
-    salary_grade: ~c"SG26",
-    type: ~c"executive"
+    name: ~c"Administrative aide I",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
+  },
+  %{
+    name: ~c"Administrative assistant I",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
+  },
+  %{
+    name: ~c"Administrative assistant II",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
+  },
+  %{
+    name: ~c"Administrative assistant III",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
+  },
+  %{
+    name: ~c"Administrative officer II",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
+  },
+  %{
+    name: ~c"Planning developmental officer III",
+    salary_grade: ~c"SG22",
+    type: ~c"administrative"
   }
 ]
 
@@ -134,22 +159,12 @@ end)
 
 document_types = [
   %{
-    serial_id: 1,
-    name: ~c"Tax Identification Number"
+    name: ~c"Daily Time Record"
   },
-  %{
-    serial_id: 2,
-    name: ~c"Passport"
-  },
-  %{
-    serial_id: 3,
-    name: ~c"PRC ID"
-  }
 ]
 
 Enum.map(document_types, fn document_type ->
   Repo.insert!(%DocumentType{
-    name: List.to_string(document_type.name),
-    serial_id: document_type.serial_id
+    name: List.to_string(document_type.name)
   })
 end)

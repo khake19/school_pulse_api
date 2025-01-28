@@ -15,8 +15,9 @@ defmodule SchoolPulseApi.Accounts.Document do
     field :path, SchoolPulseApi.FileUploader.Type
     field :size, :integer
     field :content_type, :string
+    field :date_period, :string
     belongs_to :user, Accounts.User
-    belongs_to :document_type, Accounts.DocumentType
+    belongs_to :document_type, Accounts.DocumentType, type: :id
 
     timestamps()
   end
@@ -32,8 +33,9 @@ defmodule SchoolPulseApi.Accounts.Document do
   @doc false
   def changeset(document, attrs) do
     document
-    |> cast(attrs, [:user_id, :document_type_id, :size, :content_type])
-    |> validate_required([:user_id, :document_type_id])
+    |> cast(attrs, [:user_id, :document_type_id, :size, :content_type, :date_period])
+    |> validate_required([:user_id, :document_type_id, :date_period])
+    |> validate_format(:date_period, ~r/^\d{4}-(0[1-9]|1[0-2])$/, message: "must be in YYYY-MM format")
   end
 
   def file_changeset(document, attrs) do

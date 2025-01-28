@@ -25,10 +25,16 @@ defmodule SchoolPulseApiWeb.TeacherController do
            Teachers.create_teacher(%{
              user_id: user.id,
              school_id: school.id,
-             position_id: position.id
+             position_id: position.id,
+             plantilla: teacher_params["plantilla"],
+             pagibig: teacher_params["pagibig"],
+             gsis: teacher_params["gsis"],
+             philhealth: teacher_params["philhealth"],
+             tin: teacher_params["tin"],
+             remarks: teacher_params["remarks"],
+             date_hired: teacher_params["date_hired"]
            }) do
       teacher = teacher |> Repo.preload([:position, :user])
-
       conn
       |> put_status(:created)
       |> render(:show, teacher: teacher)
@@ -47,15 +53,23 @@ defmodule SchoolPulseApiWeb.TeacherController do
     position = Teachers.get_position!(teacher_params["position"])
     school = Schools.get_school!(school_id)
 
+
     with {:ok, %User{} = user} <- Accounts.update_user_no_credential(user, teacher_params),
-         {:ok, %Teacher{} = teacher} <-
-           Teachers.update_teacher(teacher, %{
-             user_id: user.id,
-             school_id: school.id,
-             position_id: position.id,
-             employee_number: teacher_params["employee_number"],
-             remarks: teacher_params["remarks"]
-           }) do
+      {:ok, %Teacher{} = teacher} <-
+        Teachers.update_teacher(teacher, %{
+          user_id: user.id,
+          school_id: school.id,
+          position_id: position.id,
+          employee_number: teacher_params["employee_number"],
+          remarks: teacher_params["remarks"],
+          plantilla: teacher_params["plantilla"],
+          pagibig: teacher_params["pagibig"],
+          gsis: teacher_params["gsis"],
+          philhealth: teacher_params["philhealth"],
+          tin: teacher_params["tin"],
+          date_hired: teacher_params["date_hired"]
+        })
+    do
       teacher = teacher |> Repo.preload([:position, :user])
       render(conn, :show, teacher: teacher)
     end
