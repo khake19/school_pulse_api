@@ -11,6 +11,7 @@ defmodule SchoolPulseApi.Accounts.User do
     field :first_name, :string
     field :middle_name, :string
     field :last_name, :string
+    field :suffix, :string
     field :email, :string
     field :username, :string
     field :password, :string
@@ -41,8 +42,8 @@ defmodule SchoolPulseApi.Accounts.User do
 
   def account_no_password_changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :middle_name, :last_name, :email, :gender])
-    |> validate_required([:email])
+    |> cast(attrs, [:first_name, :middle_name, :suffix, :last_name, :email, :gender])
+    |> validate_required([:email, :first_name, :middle_name])
     |> unique_constraint(:email)
   end
 

@@ -31,8 +31,8 @@ defmodule SchoolPulseApiWeb.TeacherController do
              gsis: teacher_params["gsis"],
              philhealth: teacher_params["philhealth"],
              tin: teacher_params["tin"],
-             remarks: teacher_params["remarks"],
-             date_hired: teacher_params["date_hired"]
+             date_hired: teacher_params["date_hired"],
+             date_promotion: teacher_params["date_promotion"]
            }) do
       teacher = teacher |> Repo.preload([:position, :user])
       conn
@@ -61,13 +61,14 @@ defmodule SchoolPulseApiWeb.TeacherController do
           school_id: school.id,
           position_id: position.id,
           employee_number: teacher_params["employee_number"],
-          remarks: teacher_params["remarks"],
           plantilla: teacher_params["plantilla"],
           pagibig: teacher_params["pagibig"],
           gsis: teacher_params["gsis"],
           philhealth: teacher_params["philhealth"],
           tin: teacher_params["tin"],
-          date_hired: teacher_params["date_hired"]
+          date_hired: teacher_params["date_hired"],
+          date_promotion: teacher_params["date_promotion"]
+
         })
     do
       teacher = teacher |> Repo.preload([:position, :user])

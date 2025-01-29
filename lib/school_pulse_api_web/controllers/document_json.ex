@@ -31,6 +31,7 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
       user: %{
         email: document.user.email,
         first_name: document.user.first_name,
+        middle_name: document.user.middle_name,
         last_name: document.user.last_name,
         avatar: FileUploader.url({document.user.avatar, document.user}, signed: true)
       }

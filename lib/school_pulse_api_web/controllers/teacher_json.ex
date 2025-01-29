@@ -31,17 +31,18 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
       first_name: teacher.user.first_name,
       middle_name: teacher.user.middle_name,
       last_name: teacher.user.last_name,
+      suffix: teacher.user.suffix,
       email: teacher.user.email,
       gender: teacher.user.gender,
       employee_number: teacher.employee_number,
-      remarks: teacher.remarks,
       avatar: Avatar.url({teacher.user.avatar, teacher.user}, signed: true),
       philhealth: teacher.philhealth,
       gsis: teacher.gsis,
       tin: teacher.tin,
       pagibig: teacher.pagibig,
       plantilla: teacher.plantilla,
-      date_hired: teacher.date_hired
+      date_hired: teacher.date_hired,
+      date_promotion: teacher.date_promotion
     }
   end
 
