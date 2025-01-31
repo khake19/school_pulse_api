@@ -10,19 +10,19 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 
-# How to deploy to fly.io
+#### How to deploy to fly.io
 fly deploy
 
 https://fly.io/docs/elixir/getting-started/
 
-Start VM
+#### Start VM
 flyctl machine start 
 
-Check VM
+#### Check VM
 flyctl status
 
 
-SSH to console
+#### SSH to console
 fly ssh console --pty -C "/app/bin/school_pulse_api remote"
 
 
@@ -52,6 +52,10 @@ How to detach db to app
 
 How to check secrets list
   fly secrets list
+
+
+### How to connect postgres to api school pulse api
+fly postgres attach school-pulse-api-db --app school-pulse-api
 
 
 

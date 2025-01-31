@@ -24,21 +24,37 @@ defmodule GlobalSetup do
     Repo.insert!(%User{
       first_name: "admin",
       email: "admin@schoolpulse.com",
-      password: Argon2.hash_pwd_salt("test123")
+      password: Argon2.hash_pwd_salt("password123")
     })
 
     schools = [
+      "Aroroy National High School",
+      "Aroroy Stand Alone Senior High School",
       "Aroroy East Central School",
       "Balawing Elementary School",
       "Balete Elementary School",
+      "Balete High School",
       "Bienvinido R. Bulalacao Memorial Elementary School",
       "Cabangcalan Elementary School",
+      "Cabangcalan High School",
       "Capsay Elementary School",
       "Concepcion Elementary School",
+      "Elisa E. Corpus Elementary School",
+      "Jaboyoan Elementary School",
       "Lanang Elementary School",
+      "Luy-a National High School",
       "Luy-a Elementary School",
       "Malubi Elementary School",
-      "Managanaga Elementary School"
+      "Managanaga Elementary School",
+      "Manamoc Upland Integrated School",
+      "Nabongsoran Elementary School",
+      "Nabongsoran High School",
+      "Pangle Elementary School",
+      "Panique National High School",
+      "Pinanaan Elementary School",
+      "Syndicate Elementary School",
+      "Syndicate National School",
+      "Tinago Elementary School",
     ]
 
     Enum.map(schools, &Repo.insert!(%School{name: &1}))
@@ -110,19 +126,44 @@ defmodule GlobalSetup do
         type: ~c"administrative"
       },
       %{
-        name: ~c"District supervisor",
+        name: ~c"Public schools district supervisor",
         salary_grade: ~c"SG22",
         type: ~c"administrative"
       },
       %{
-        name: ~c"Education supervisor I",
+        name: ~c"Administrative aide I",
         salary_grade: ~c"SG22",
         type: ~c"administrative"
       },
       %{
-        name: ~c"Schools division superintendent I",
-        salary_grade: ~c"SG26",
-        type: ~c"executive"
+        name: ~c"Administrative aide I",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
+      },
+      %{
+        name: ~c"Administrative assistant I",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
+      },
+      %{
+        name: ~c"Administrative assistant II",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
+      },
+      %{
+        name: ~c"Administrative assistant III",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
+      },
+      %{
+        name: ~c"Administrative officer II",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
+      },
+      %{
+        name: ~c"Planning developmental officer III",
+        salary_grade: ~c"SG22",
+        type: ~c"administrative"
       }
     ]
 
