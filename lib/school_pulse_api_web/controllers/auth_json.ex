@@ -8,8 +8,8 @@ defmodule SchoolPulseApiWeb.AuthJSON do
   end
 
   def me(%{current_user: current_user}) do
-    %{ data:
-      %{
+    %{
+      data: %{
         id: current_user.id,
         first_name: current_user.first_name,
         last_name: current_user.last_name,

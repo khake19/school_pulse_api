@@ -54,7 +54,7 @@ defmodule GlobalSetup do
       "Pinanaan Elementary School",
       "Syndicate Elementary School",
       "Syndicate National School",
-      "Tinago Elementary School",
+      "Tinago Elementary School"
     ]
 
     Enum.map(schools, &Repo.insert!(%School{name: &1}))

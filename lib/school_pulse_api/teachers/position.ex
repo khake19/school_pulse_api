@@ -14,7 +14,6 @@ defmodule SchoolPulseApi.Teachers.Position do
     timestamps()
   end
 
-  @doc false
   def changeset(position, attrs) do
     position
     |> cast(attrs, [:name, :salary_grade, :type])

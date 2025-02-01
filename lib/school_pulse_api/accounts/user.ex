@@ -33,7 +33,6 @@ defmodule SchoolPulseApi.Accounts.User do
     |> put_password_hash()
   end
 
-
   def avatar_changeset(user, attrs) do
     user
     |> cast_attachments(attrs, [:avatar])

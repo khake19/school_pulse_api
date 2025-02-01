@@ -26,7 +26,11 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
     document_type = Documents.get_document_type_by_id!(document_params["document_type"])
 
-    case Documents.get_document_by_type_and_date(teacher.user.id, document_type.id, document_params["date_period"]) do
+    case Documents.get_document_by_type_and_date(
+           teacher.user.id,
+           document_type.id,
+           document_params["date_period"]
+         ) do
       nil ->
         case Documents.create_document(%{
                path: document_params["file"],
@@ -44,6 +48,7 @@ defmodule SchoolPulseApiWeb.DocumentController do
 
       document ->
         FileUploader.delete({document.path, document})
+
         case Documents.update_document(document, %{
                path: document_params["file"],
                user_id: teacher.user.id,
@@ -53,7 +58,6 @@ defmodule SchoolPulseApiWeb.DocumentController do
                date_period: document_params["date_period"]
              }) do
           {:ok, %Document{} = document} ->
-
             conn
             |> put_status(:created)
             |> render(:show, document: document)

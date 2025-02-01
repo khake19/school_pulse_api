@@ -69,7 +69,8 @@ if config_env() == :prod do
     secret_access_key: System.get_env("B2_SECRET_ACCESS_KEY")
 
   config :waffle,
-    storage: Waffle.Storage.S3, # Use the S3 storage adapter
+    # Use the S3 storage adapter
+    storage: Waffle.Storage.S3,
     bucket: System.get_env("B2_BUCKET_NAME"),
     asset_host: System.get_env("B2_ASSET_HOST")
 

@@ -17,10 +17,10 @@ defmodule SchoolPulseApi.Teachers do
       [%Teacher{}, ...]
 
   """
-  @spec list_teachers(map) ::
-          {:ok, {[Teacher.t()], Flop.Meta.t()}} | {:error, Flop.Meta.t()}
   def list_teachers(school_id, params \\ %{}) do
     Teacher
+    # Explicit join with alias
+    |> join(:left, [t], u in assoc(t, :user), as: :users)
     |> where([t], t.school_id == ^school_id)
     |> order_by([t], desc: t.inserted_at)
     |> preload([:user, :school, :position])

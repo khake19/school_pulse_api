@@ -160,7 +160,7 @@ end)
 document_types = [
   %{
     name: ~c"Daily Time Record"
-  },
+  }
 ]
 
 Enum.map(document_types, fn document_type ->

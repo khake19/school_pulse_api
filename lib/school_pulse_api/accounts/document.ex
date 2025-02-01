@@ -35,7 +35,9 @@ defmodule SchoolPulseApi.Accounts.Document do
     document
     |> cast(attrs, [:user_id, :document_type_id, :size, :content_type, :date_period])
     |> validate_required([:user_id, :document_type_id, :date_period])
-    |> validate_format(:date_period, ~r/^\d{4}-(0[1-9]|1[0-2])$/, message: "must be in YYYY-MM format")
+    |> validate_format(:date_period, ~r/^\d{4}-(0[1-9]|1[0-2])$/,
+      message: "must be in YYYY-MM format"
+    )
   end
 
   def file_changeset(document, attrs) do

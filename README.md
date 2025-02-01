@@ -68,6 +68,11 @@ fly ssh console --pty -C "/app/bin/school_pulse_api remote"
 GlobalSetup.run()
 
 
+### How to connect Postres to your local
+#### proxy connection
+fly proxy 15432:5432 -a school-pulse-api-db
+
+
 
 ### Phoenix: Ecto migrations cheatsheet
 https://devhints.io/phoenix-migrations

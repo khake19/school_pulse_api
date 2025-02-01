@@ -35,6 +35,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
              date_promotion: teacher_params["date_promotion"]
            }) do
       teacher = teacher |> Repo.preload([:position, :user])
+
       conn
       |> put_status(:created)
       |> render(:show, teacher: teacher)
@@ -47,30 +48,26 @@ defmodule SchoolPulseApiWeb.TeacherController do
   end
 
   def update(conn, %{"school_id" => school_id, "id" => id, "teacher" => teacher_params}) do
-
     teacher = Teachers.get_teacher!(id)
     user = Accounts.get_user!(teacher.user_id)
     position = Teachers.get_position!(teacher_params["position"])
     school = Schools.get_school!(school_id)
 
-
     with {:ok, %User{} = user} <- Accounts.update_user_no_credential(user, teacher_params),
-      {:ok, %Teacher{} = teacher} <-
-        Teachers.update_teacher(teacher, %{
-          user_id: user.id,
-          school_id: school.id,
-          position_id: position.id,
-          employee_number: teacher_params["employee_number"],
-          plantilla: teacher_params["plantilla"],
-          pagibig: teacher_params["pagibig"],
-          gsis: teacher_params["gsis"],
-          philhealth: teacher_params["philhealth"],
-          tin: teacher_params["tin"],
-          date_hired: teacher_params["date_hired"],
-          date_promotion: teacher_params["date_promotion"]
-
-        })
-    do
+         {:ok, %Teacher{} = teacher} <-
+           Teachers.update_teacher(teacher, %{
+             user_id: user.id,
+             school_id: school.id,
+             position_id: position.id,
+             employee_number: teacher_params["employee_number"],
+             plantilla: teacher_params["plantilla"],
+             pagibig: teacher_params["pagibig"],
+             gsis: teacher_params["gsis"],
+             philhealth: teacher_params["philhealth"],
+             tin: teacher_params["tin"],
+             date_hired: teacher_params["date_hired"],
+             date_promotion: teacher_params["date_promotion"]
+           }) do
       teacher = teacher |> Repo.preload([:position, :user])
       render(conn, :show, teacher: teacher)
     end
