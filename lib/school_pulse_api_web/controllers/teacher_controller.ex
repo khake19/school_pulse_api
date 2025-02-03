@@ -7,11 +7,15 @@ defmodule SchoolPulseApiWeb.TeacherController do
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Schools
+  alias SchoolPulseApi.Utils.FlopHelper
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, %{"school_id" => school_id}) do
-    with {:ok, result} <- Teachers.list_teachers(school_id, conn.query_params) do
+    params =
+      FlopHelper.transform_search_params(conn.query_params, [:search])
+
+    with {:ok, result} <- Teachers.list_teachers(school_id, params) do
       render(conn, :index, teachers: result)
     end
   end

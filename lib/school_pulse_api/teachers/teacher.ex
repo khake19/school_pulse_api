@@ -9,15 +9,38 @@ defmodule SchoolPulseApi.Teachers.Teacher do
 
   @derive {
     Flop.Schema,
-    filterable: [:user_email],
-    sortable: [:user_email],
+    filterable: [:search],
+    sortable: [:employee_number, :email],
     adapter_opts: [
       join_fields: [
-        user_email: [
+        email: [
           binding: :users,
           field: :email,
           ecto_type: :string
+        ],
+        first_name: [
+          binding: :users,
+          field: :first_name,
+          ecto_type: :string
+        ],
+        middle_name: [
+          binding: :users,
+          field: :middle_name,
+          ecto_type: :string
+        ],
+        last_name: [
+          binding: :users,
+          field: :last_name,
+          ecto_type: :string
+        ],
+        suffix: [
+          binding: :users,
+          field: :suffix,
+          ecto_type: :string
         ]
+      ],
+      compound_fields: [
+        search: [:employee_number, :email, :first_name, :middle_name, :last_name, :suffix]
       ]
     ]
   }

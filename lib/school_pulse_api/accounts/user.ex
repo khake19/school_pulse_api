@@ -5,6 +5,15 @@ defmodule SchoolPulseApi.Accounts.User do
   alias SchoolPulseApi.Teachers
   use Waffle.Ecto.Schema
 
+  @derive {
+    Flop.Schema,
+    filterable: [:full_name, :email],
+    sortable: [:full_name, :email],
+    adapter_opts: [
+      compound_fields: [full_name: [:first_name, :middle_name, :last_name, :suffix]]
+    ]
+  }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do

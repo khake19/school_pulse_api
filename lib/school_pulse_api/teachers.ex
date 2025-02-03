@@ -8,6 +8,7 @@ defmodule SchoolPulseApi.Teachers do
 
   alias SchoolPulseApi.Teachers.Teacher
 
+  @spec list_teachers(any(), Flop.t()) :: {:error, Flop.Meta.t()} | {:ok, {list(), Flop.Meta.t()}}
   @doc """
   Returns the list of teachers.
 
@@ -18,13 +19,15 @@ defmodule SchoolPulseApi.Teachers do
 
   """
   def list_teachers(school_id, params \\ %{}) do
-    Teacher
-    # Explicit join with alias
-    |> join(:left, [t], u in assoc(t, :user), as: :users)
-    |> where([t], t.school_id == ^school_id)
-    |> order_by([t], desc: t.inserted_at)
-    |> preload([:user, :school, :position])
-    |> Flop.validate_and_run(params, for: Teacher)
+    query =
+      Teacher
+      |> join(:left, [t], u in assoc(t, :user), as: :users)
+      |> where([t], t.school_id == ^school_id)
+      |> order_by([t], desc: t.inserted_at)
+      |> preload([:user, :school, :position])
+
+    result = Flop.validate_and_run(query, params, for: Teacher)
+    result
   end
 
   @doc """

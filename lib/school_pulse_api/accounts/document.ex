@@ -6,7 +6,18 @@ defmodule SchoolPulseApi.Accounts.Document do
 
   @derive {
     Flop.Schema,
-    filterable: [:path], sortable: [:path]
+    filterable: [:path],
+    sortable: [:path],
+    adapter_opts: [
+      join_fields: [
+        document_type: [
+          binding: :document_type,
+          field: :name,
+          ecto_type: :string
+        ]
+      ],
+      compound_fields: [search: [:path, :document_type]]
+    ]
   }
 
   @primary_key {:id, :binary_id, autogenerate: true}
