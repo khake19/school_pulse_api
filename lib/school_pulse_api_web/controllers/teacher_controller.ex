@@ -31,6 +31,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
              school_id: school.id,
              position_id: position.id,
              plantilla: teacher_params["plantilla"],
+             employee_number: teacher_params["employee_number"],
              pagibig: teacher_params["pagibig"],
              gsis: teacher_params["gsis"],
              philhealth: teacher_params["philhealth"],
