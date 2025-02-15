@@ -11,160 +11,162 @@
 # and so on) as they will fail if something goes wrong.
 
 alias SchoolPulseApi.Repo
-alias SchoolPulseApi.Accounts
+# alias SchoolPulseApi.Accounts
 alias SchoolPulseApi.Accounts.User
-alias SchoolPulseApi.Accounts.DocumentType
-alias SchoolPulseApi.Schools
-alias SchoolPulseApi.Schools.School
-alias SchoolPulseApi.Teachers.Teacher
-alias SchoolPulseApi.Teachers.Position
+# alias SchoolPulseApi.Accounts.DocumentType
+# alias SchoolPulseApi.Schools
+# alias SchoolPulseApi.Schools.School
+# alias SchoolPulseApi.Teachers.Teacher
+# alias SchoolPulseApi.Teachers.Position
 
 Repo.insert!(%User{
-  first_name: "test",
-  email: "test@schoolpulse.com",
-  password: Argon2.hash_pwd_salt("test123")
+  first_name: "hazel",
+  last_name: "jazul",
+  email: "hazel@schoolpulse.com",
+  role_id: 1,
+  password: Argon2.hash_pwd_salt("password123")
 })
 
-schools = [
-  "Aroroy East Central School",
-  "Balawing Elementary School",
-  "Balete Elementary School",
-  "Bienvinido R. Bulalacao Memorial Elementary School",
-  "Cabangcalan Elementary School",
-  "Capsay Elementary School",
-  "Concepcion Elementary School",
-  "Lanang Elementary School",
-  "Luy-a Elementary School",
-  "Malubi Elementary School",
-  "Managanaga Elementary School"
-]
+# schools = [
+#   "Aroroy East Central School",
+#   "Balawing Elementary School",
+#   "Balete Elementary School",
+#   "Bienvinido R. Bulalacao Memorial Elementary School",
+#   "Cabangcalan Elementary School",
+#   "Capsay Elementary School",
+#   "Concepcion Elementary School",
+#   "Lanang Elementary School",
+#   "Luy-a Elementary School",
+#   "Malubi Elementary School",
+#   "Managanaga Elementary School"
+# ]
 
-Enum.map(schools, &Repo.insert!(%School{name: &1}))
+# Enum.map(schools, &Repo.insert!(%School{name: &1}))
 
-positions = [
-  %{
-    name: ~c"Teacher I",
-    salary_grade: ~c"SG11",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Teacher II",
-    salary_grade: ~c"SG12",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Teacher III",
-    salary_grade: ~c"SG13",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Master Teacher I",
-    salary_grade: ~c"SG18",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Master Teacher II",
-    salary_grade: ~c"SG19",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Master Teacher III",
-    salary_grade: ~c"SG20",
-    type: ~c"teaching"
-  },
-  %{
-    name: ~c"Head teacher I",
-    salary_grade: ~c"SG14",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Head teacher II",
-    salary_grade: ~c"SG15",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Head teacher III",
-    salary_grade: ~c"SG16",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Principal I",
-    salary_grade: ~c"SG19",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Principal II",
-    salary_grade: ~c"SG20",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Principal III",
-    salary_grade: ~c"SG21",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Principal IV",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Public schools district supervisor",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative aide I",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative aide I",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative assistant I",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative assistant II",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative assistant III",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Administrative officer II",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  },
-  %{
-    name: ~c"Planning developmental officer III",
-    salary_grade: ~c"SG22",
-    type: ~c"administrative"
-  }
-]
+# positions = [
+#   %{
+#     name: ~c"Teacher I",
+#     salary_grade: ~c"SG11",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Teacher II",
+#     salary_grade: ~c"SG12",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Teacher III",
+#     salary_grade: ~c"SG13",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Master Teacher I",
+#     salary_grade: ~c"SG18",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Master Teacher II",
+#     salary_grade: ~c"SG19",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Master Teacher III",
+#     salary_grade: ~c"SG20",
+#     type: ~c"teaching"
+#   },
+#   %{
+#     name: ~c"Head teacher I",
+#     salary_grade: ~c"SG14",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Head teacher II",
+#     salary_grade: ~c"SG15",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Head teacher III",
+#     salary_grade: ~c"SG16",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Principal I",
+#     salary_grade: ~c"SG19",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Principal II",
+#     salary_grade: ~c"SG20",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Principal III",
+#     salary_grade: ~c"SG21",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Principal IV",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Public schools district supervisor",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative aide I",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative aide I",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative assistant I",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative assistant II",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative assistant III",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Administrative officer II",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   },
+#   %{
+#     name: ~c"Planning developmental officer III",
+#     salary_grade: ~c"SG22",
+#     type: ~c"administrative"
+#   }
+# ]
 
-Enum.map(positions, fn position ->
-  Repo.insert!(%Position{
-    name: List.to_string(position.name),
-    salary_grade: List.to_string(position.salary_grade),
-    type: List.to_string(position.type)
-  })
-end)
+# Enum.map(positions, fn position ->
+#   Repo.insert!(%Position{
+#     name: List.to_string(position.name),
+#     salary_grade: List.to_string(position.salary_grade),
+#     type: List.to_string(position.type)
+#   })
+# end)
 
-document_types = [
-  %{
-    name: ~c"Daily Time Record"
-  }
-]
+# document_types = [
+#   %{
+#     name: ~c"Daily Time Record"
+#   }
+# ]
 
-Enum.map(document_types, fn document_type ->
-  Repo.insert!(%DocumentType{
-    name: List.to_string(document_type.name)
-  })
-end)
+# Enum.map(document_types, fn document_type ->
+#   Repo.insert!(%DocumentType{
+#     name: List.to_string(document_type.name)
+#   })
+# end)

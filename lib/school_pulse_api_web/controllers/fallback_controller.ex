@@ -21,4 +21,11 @@ defmodule SchoolPulseApiWeb.FallbackController do
     |> put_view(html: SchoolPulseApiWeb.ErrorHTML, json: SchoolPulseApiWeb.ErrorJSON)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:forbidden)
+    |> put_view(html: SchoolPulseApiWeb.ErrorHTML)
+    |> render(:"403")
+  end
 end

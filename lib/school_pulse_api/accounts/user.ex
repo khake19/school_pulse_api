@@ -1,9 +1,12 @@
 defmodule SchoolPulseApi.Accounts.User do
   use Ecto.Schema
+  use Waffle.Ecto.Schema
+
   import Ecto.Changeset
+
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Teachers
-  use Waffle.Ecto.Schema
+  alias SchoolPulseApi.Schools
 
   @derive {
     Flop.Schema,
@@ -27,18 +30,30 @@ defmodule SchoolPulseApi.Accounts.User do
     field :gender, :string
     field :avatar, SchoolPulseApi.Avatar.Type
 
+    belongs_to :role, Accounts.Role, type: :id
+
     has_one :teacher, Teachers.Teacher, foreign_key: :user_id
     has_many :documents, Accounts.Document, foreign_key: :user_id
+    many_to_many :schools, Schools.School, join_through: "school_admins", on_replace: :delete
 
     timestamps()
   end
 
+  @spec changeset(
+          {map(), map()}
+          | %{
+              :__struct__ => atom() | %{:__changeset__ => any(), optional(any()) => any()},
+              optional(atom()) => any()
+            },
+          :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
+        ) :: Ecto.Changeset.t()
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :password])
+    |> cast(attrs, [:first_name, :last_name, :email, :password, :role_id])
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
+    |> cast_assoc(:role_id)
     |> put_password_hash()
   end
 

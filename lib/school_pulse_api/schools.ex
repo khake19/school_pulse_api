@@ -18,7 +18,24 @@ defmodule SchoolPulseApi.Schools do
 
   """
   def list_schools do
-    Repo.all(School)
+    Repo.all(School) |> Repo.preload(:users)
+  end
+
+  def list_schools_for_user(user_id) do
+    case Ecto.UUID.dump(user_id) do
+      {:ok, binary_id} ->
+        from(s in School,
+          join: sa in "school_admins",
+          on: sa.school_id == s.id,
+          where: sa.user_id == ^binary_id
+        )
+        |> Repo.all()
+        |> Repo.preload(:users)
+
+      :error ->
+        # Return empty list if user_id is invalid
+        []
+    end
   end
 
   @doc """
