@@ -71,7 +71,7 @@ config :guardian, Guardian.DB,
 
 config :flop,
   repo: SchoolPulseApi.Repo,
-  default_limit: 5
+  default_limit: 25
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
