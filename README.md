@@ -11,19 +11,20 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 
 #### How to deploy to fly.io
-fly deploy
 
 https://fly.io/docs/elixir/getting-started/
 
 #### Start VM
-flyctl machine start 
+`flyctl machine start`
 
 #### Check VM
-flyctl status
+`flyctl status`
 
+#### Deply changes
+`fly deploy`
 
 #### SSH to console
-fly ssh console --pty -C "/app/bin/school_pulse_api remote"
+`fly ssh console --pty -C "/app/bin/school_pulse_api remote"`
 
 
 
@@ -31,46 +32,45 @@ fly ssh console --pty -C "/app/bin/school_pulse_api remote"
 ### How to connect to postgres
 
 #### Connect to postgress
-fly postgres connect -a school-pulse-api-db
+`fly postgres connect -a school-pulse-api-db`
 
 #### List of databases
-\l
+`\l`
 
 #### Connect to school pulse api
-\c school_pulse_api
+`\c school_pulse_api`
 
 #### List of relationship
-\dt
+`\dt`
 
 
+### How to detach db to app
 
-How to detach db to app
-
-  unset DATABASE_URL first
-    fly secrets unset DATABASE_URL
+#### unset DATABASE_URL first
+`fly secrets unset DATABASE_URL`
 
 
-How to check secrets list
-  fly secrets list
+#### How to check secrets list
+`fly secrets list`
 
 
 ### How to connect postgres to api school pulse api
-fly postgres attach school-pulse-api-db --app school-pulse-api
+`fly postgres attach school-pulse-api-db --app school-pulse-api`
 
 
 
 ### How to run seeds in production
 
 #### SSH to console
-fly ssh console --pty -C "/app/bin/school_pulse_api remote"
+`fly ssh console --pty -C "/app/bin/school_pulse_api remote"`
 
 #### Run Global Setup to seeds data
-GlobalSetup.run()
+`GlobalSetup.run()`
 
 
 ### How to connect Postres to your local
 #### proxy connection
-fly proxy 15432:5432 -a school-pulse-api-db
+`fly proxy 15432:5432 -a school-pulse-api-db`
 
 
 

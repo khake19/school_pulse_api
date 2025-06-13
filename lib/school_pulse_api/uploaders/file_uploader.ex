@@ -4,7 +4,7 @@ defmodule SchoolPulseApi.FileUploader do
   # Include ecto support (requires package waffle_ecto installed):
   use Waffle.Ecto.Definition
 
-  @versions [:original]
+  @versions [:original, :thumb]
   @extensions ~w(.jpg .jpeg .png .pdf)
 
   # To add a thumbnail version:

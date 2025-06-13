@@ -8,6 +8,7 @@ defmodule SchoolPulseApiWeb.TeacherController do
   alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Utils.FlopHelper
+  alias SchoolPulseApi.Avatar
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -81,6 +82,11 @@ defmodule SchoolPulseApiWeb.TeacherController do
   def delete(conn, %{"school_id" => _school_id, "id" => id}) do
     teacher = Teachers.get_teacher!(id)
     user = Accounts.get_user!(teacher.user_id)
+
+    # Delete avatar file if it exists
+    if user.avatar do
+      Avatar.delete({user.avatar, user})
+    end
 
     with {:ok, %Teacher{}} <- Teachers.delete_teacher(teacher),
          {:ok, %User{}} <- Accounts.delete_user(user) do
