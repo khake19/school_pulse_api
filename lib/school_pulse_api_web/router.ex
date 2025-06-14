@@ -10,6 +10,10 @@ defmodule SchoolPulseApiWeb.Router do
     conn |> json(%{errors: message}) |> halt()
   end
 
+  def handle_errors(conn, error_info) do
+    conn |> json(%{errors: error_info}) |> halt()
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -32,6 +36,7 @@ defmodule SchoolPulseApiWeb.Router do
     resources "/schools", SchoolController do
       resources "/teachers", TeacherController
       resources "/documents", DocumentController
+      resources "/leaves", LeaveController
     end
 
     get "/positions", PositionController, :index

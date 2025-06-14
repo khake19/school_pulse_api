@@ -5,8 +5,6 @@ defmodule SchoolPulseApi.Teachers.Teacher do
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Teachers
 
-  use Ecto.Schema
-
   @derive {
     Flop.Schema,
     filterable: [:search],

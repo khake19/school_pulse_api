@@ -82,9 +82,15 @@ defmodule SchoolPulseApiWeb.DocumentController do
     document = Documents.get_document!(id)
 
     # # Delete document file if it exists
-    # if document.path do
-    #   FileUploader.delete({document.path, document})
-    # end
+    if document.path do
+      case FileUploader.delete({document.path, document}) do
+        :ok -> IO.puts("Deleted")
+        {:error, _} -> IO.inspect(label: "Failed to delete")
+      end
+    end
+
+    # document = SchoolPulseApi.Documents.get_document!("6b89c11a-2a75-462f-9a79-33e0a5ae7065")
+    # SchoolPulseApi.FileUploader.delete({document.path.file_name, document})
 
     with {:ok, %Document{}} <- Documents.delete_document(document) do
       send_resp(conn, :no_content, "")

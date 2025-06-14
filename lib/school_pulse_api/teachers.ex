@@ -8,7 +8,6 @@ defmodule SchoolPulseApi.Teachers do
 
   alias SchoolPulseApi.Teachers.Teacher
 
-  @spec list_teachers(any(), Flop.t()) :: {:error, Flop.Meta.t()} | {:ok, {list(), Flop.Meta.t()}}
   @doc """
   Returns the list of teachers.
 
@@ -18,7 +17,7 @@ defmodule SchoolPulseApi.Teachers do
       [%Teacher{}, ...]
 
   """
-  def list_teachers(school_id, params \\ %{}) do
+  def list_teachers(school_id \\ nil, params \\ %{}) do
     query =
       Teacher
       |> join(:left, [t], u in assoc(t, :user), as: :users)
@@ -26,8 +25,8 @@ defmodule SchoolPulseApi.Teachers do
       |> order_by([t], desc: t.inserted_at)
       |> preload([:user, :school, :position])
 
-    result = Flop.validate_and_run(query, params, for: Teacher)
-    result
+    query
+    |> Flop.validate_and_run(params, for: Teacher)
   end
 
   @doc """
