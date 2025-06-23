@@ -1,5 +1,5 @@
 defmodule SchoolPulseApi.Utils.FlopHelper do
-  def transform_search_params(%{"filterSearch" => search_term} = params, filter_fields)
+  def transform_search_params(%{"search" => search_term} = params, filter_fields)
       when is_list(filter_fields) do
     filters =
       Enum.map(filter_fields, fn field ->
@@ -7,7 +7,7 @@ defmodule SchoolPulseApi.Utils.FlopHelper do
       end)
 
     params
-    |> Map.drop(["filterSearch"])
+    |> Map.drop(["search"])
     |> Map.put("filters", filters)
   end
 
