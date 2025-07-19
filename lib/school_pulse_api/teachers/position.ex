@@ -3,7 +3,7 @@ defmodule SchoolPulseApi.Teachers.Position do
   import Ecto.Changeset
   alias SchoolPulseApi.Teachers
 
-  @primary_key {:id, :id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "positions" do
     field :name, :string

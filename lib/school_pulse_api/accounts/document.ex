@@ -6,7 +6,7 @@ defmodule SchoolPulseApi.Accounts.Document do
 
   @derive {
     Flop.Schema,
-    filterable: [:path],
+    filterable: [:path, :teacher_id],
     sortable: [:path],
     adapter_opts: [
       join_fields: [
@@ -14,6 +14,10 @@ defmodule SchoolPulseApi.Accounts.Document do
           binding: :document_type,
           field: :name,
           ecto_type: :string
+        ],
+        teacher_id: [
+          binding: :teacher,
+          field: :id
         ]
       ],
       compound_fields: [search: [:path, :document_type]]

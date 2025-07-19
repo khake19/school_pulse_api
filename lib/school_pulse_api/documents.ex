@@ -21,28 +21,27 @@ defmodule SchoolPulseApi.Documents do
 
   """
   def list_documents(school_id \\ nil, params \\ %{}) do
-    teacher_id = Map.get(params, "teacher_id")
-
     query =
       from d in Document,
-        join: u in User,
-        on: u.id == d.user_id,
-        join: t in Teacher,
-        on: t.user_id == u.id,
-        join: s in School,
-        on: s.id == t.school_id,
+        as: :document,
+        join: u in User, as: :user, on: u.id == d.user_id,
+        join: t in Teacher, as: :teacher, on: t.user_id == u.id,
+        join: dt in DocumentType, on: dt.id == d.document_type_id,
+        join: s in School, as: :school, on: s.id == t.school_id,
         where: s.id == ^school_id
 
-    query =
-      cond do
-        teacher_id -> from [_, _, t] in query, where: t.id == ^teacher_id
-        true -> query
-      end
+    params = %{
+      filters: [
+        %{field: :teacher_id, op: :in, value: params["teacher_id"]}
+      ]
+    }
 
-    query
-    |> order_by([d], desc: d.inserted_at)
-    |> preload([:user, :document_type])
-    |> Flop.validate_and_run(params, for: Document)
+    result =
+      query
+      |> order_by([d], desc: d.inserted_at)
+      |> preload([:user, :document_type])
+      |> Flop.validate_and_run(params, for: Document)
+    result
   end
 
   @doc """

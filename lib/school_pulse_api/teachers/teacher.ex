@@ -54,7 +54,7 @@ defmodule SchoolPulseApi.Teachers.Teacher do
     field :plantilla, :string
     field :date_hired, :date
     field :date_promotion, :date
-    belongs_to :position, Teachers.Position, type: :id
+    belongs_to :position, Teachers.Position, type: :binary_id
     belongs_to :user, Accounts.User
     belongs_to :school, Schools.School
     timestamps()

@@ -11,17 +11,9 @@ defmodule SchoolPulseApiWeb.SchoolController do
 
   def index(conn, _params) do
     current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
-
-    schools =
-      case current_user.role.name do
-        "admin" -> Schools.list_schools()
-        "school admin" -> Schools.list_schools_for_user(current_user.id)
-        _ -> []
-      end
-
-    schools =
-      Enum.filter(schools, fn school -> Bodyguard.permit(Policy, :view, current_user, school) end)
-
+    schools = Schools.list_schools()
+    |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
+    |> Enum.sort_by(& &1.name)
     render(conn, :index, schools: schools)
   end
 
