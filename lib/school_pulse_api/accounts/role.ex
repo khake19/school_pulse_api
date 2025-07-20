@@ -7,6 +7,8 @@ defmodule SchoolPulseApi.Accounts.Role do
   schema "roles" do
     field :name, :string
     field :description, :string
+
+    timestamps()
   end
 
   @doc false

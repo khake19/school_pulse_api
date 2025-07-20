@@ -8,6 +8,7 @@ defmodule SchoolPulseApi.Repo.Migrations.UserAddSuffix do
 
     alter table(:teachers) do
       remove :remarks
+      remove :position
       add :date_promotion, :date
     end
   end
