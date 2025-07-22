@@ -24,10 +24,17 @@ defmodule SchoolPulseApi.Documents do
     query =
       from d in Document,
         as: :document,
-        join: u in User, as: :user, on: u.id == d.user_id,
-        join: t in Teacher, as: :teacher, on: t.user_id == u.id,
-        join: dt in DocumentType, on: dt.id == d.document_type_id,
-        join: s in School, as: :school, on: s.id == t.school_id,
+        join: u in User,
+        as: :user,
+        on: u.id == d.user_id,
+        join: t in Teacher,
+        as: :teacher,
+        on: t.user_id == u.id,
+        join: dt in DocumentType,
+        on: dt.id == d.document_type_id,
+        join: s in School,
+        as: :school,
+        on: s.id == t.school_id,
         where: s.id == ^school_id
 
     params = %{
@@ -41,6 +48,7 @@ defmodule SchoolPulseApi.Documents do
       |> order_by([d], desc: d.inserted_at)
       |> preload([:user, :document_type])
       |> Flop.validate_and_run(params, for: Document)
+
     result
   end
 

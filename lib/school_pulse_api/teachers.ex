@@ -7,6 +7,7 @@ defmodule SchoolPulseApi.Teachers do
   alias SchoolPulseApi.Repo
 
   alias SchoolPulseApi.Teachers.Teacher
+  alias SchoolPulseApi.Teachers.Position
 
   @doc """
   Returns the list of teachers.
@@ -18,24 +19,22 @@ defmodule SchoolPulseApi.Teachers do
 
   """
   def list_teachers(school_id \\ nil, params \\ %{}) do
-    position_id = Map.get(params, "position")
-
     query =
       Teacher
       |> join(:left, [t], u in assoc(t, :user), as: :users)
+      |> join(:left, [t], p in assoc(t, :position), as: :positions)
       |> where([t], t.school_id == ^school_id)
-      |> maybe_filter_position(position_id)
-      |> order_by([t], desc: t.inserted_at)
-      |> preload([:user, :school, :position])
+
+    params = %{
+      filters: [
+        %{field: :position_id, op: :in, value: params["position_id"]}
+      ]
+    }
 
     query
+    |> order_by([t], desc: t.inserted_at)
+    |> preload([:user, :school, :position])
     |> Flop.validate_and_run(params, for: Teacher)
-  end
-
-  defp maybe_filter_position(query, nil), do: query
-
-  defp maybe_filter_position(query, position_id) do
-    where(query, [t], t.position_id == ^position_id)
   end
 
   @doc """

@@ -19,32 +19,36 @@ alias SchoolPulseApi.Schools.School
 alias SchoolPulseApi.Teachers.Teacher
 alias SchoolPulseApi.Teachers.Position
 
-
 # Seed roles first using Ecto struct so timestamps are set
 now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
-admin_role = Repo.insert!(%SchoolPulseApi.Accounts.Role{
-  name: "admin"
-})
-teacher_role = Repo.insert!(%SchoolPulseApi.Accounts.Role{
-  name: "school admin",
-  inserted_at: now,
-  updated_at: now
-})
+admin_role =
+  Repo.insert!(%SchoolPulseApi.Accounts.Role{
+    name: "admin"
+  })
+
+teacher_role =
+  Repo.insert!(%SchoolPulseApi.Accounts.Role{
+    name: "school admin",
+    inserted_at: now,
+    updated_at: now
+  })
 
 # Now use the UUID for the user
-teacher = Repo.insert!(%User{
-  first_name: "hazel",
-  last_name: "jazul",
-  email: "hazel@schoolpulse.com",
-  role_id: admin_role.id,  # Use the UUID, not an integer
-  password: Argon2.hash_pwd_salt("password123")
-})
+teacher =
+  Repo.insert!(%User{
+    first_name: "hazel",
+    last_name: "jazul",
+    email: "hazel@schoolpulse.com",
+    # Use the UUID, not an integer
+    role_id: admin_role.id,
+    password: Argon2.hash_pwd_salt("password123")
+  })
 
 Repo.insert!(%User{
   first_name: "kerk",
   last_name: "jazul",
-  email: "kerk@schoolpulse.com",
+  email: "kerk@schoolpulse.com"
 })
 
 schools = [
@@ -173,13 +177,14 @@ positions = [
 ]
 
 # Insert positions and collect their records
-position_records = Enum.map(positions, fn position ->
-  Repo.insert!(%Position{
-    name: List.to_string(position.name),
-    salary_grade: List.to_string(position.salary_grade),
-    type: List.to_string(position.type)
-  })
-end)
+position_records =
+  Enum.map(positions, fn position ->
+    Repo.insert!(%Position{
+      name: List.to_string(position.name),
+      salary_grade: List.to_string(position.salary_grade),
+      type: List.to_string(position.type)
+    })
+  end)
 
 document_types = [
   %{

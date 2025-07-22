@@ -7,7 +7,7 @@ defmodule SchoolPulseApi.Teachers.Teacher do
 
   @derive {
     Flop.Schema,
-    filterable: [:search],
+    filterable: [:search, :position_id],
     sortable: [:employee_number, :email],
     adapter_opts: [
       join_fields: [
@@ -35,6 +35,10 @@ defmodule SchoolPulseApi.Teachers.Teacher do
           binding: :users,
           field: :suffix,
           ecto_type: :string
+        ],
+        position_id: [
+          binding: :positions,
+          field: :id
         ]
       ],
       compound_fields: [
