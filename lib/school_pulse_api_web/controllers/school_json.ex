@@ -33,13 +33,12 @@ defmodule SchoolPulseApiWeb.SchoolJSON do
     %{data: counts}
   end
 
-  @doc """
-  Renders school summaries (currently teacher counts) with pagination support.
-  """
-  def school_summaries(%{school_summaries: %{entries: entries, meta: meta}}) do
+  def school_summaries(%{school_summaries: school_summaries}) do
+    {schools, meta} = school_summaries
+
     SharedJSON.paginated_response(
       for(
-        %{school: school, teacher_count: count} <- entries,
+        %{school: school, teacher_count: count} <- schools,
         do: %{
           id: school.id,
           name: school.name,
@@ -48,21 +47,6 @@ defmodule SchoolPulseApiWeb.SchoolJSON do
       ),
       meta
     )
-  end
-
-  def school_summaries(%{school_summaries: school_summaries}) when is_list(school_summaries) do
-    # Fallback for backward compatibility
-    %{
-      data:
-        for(
-          %{school: school, teacher_count: count} <- school_summaries,
-          do: %{
-            id: school.id,
-            name: school.name,
-            teacher_count: count
-          }
-        )
-    }
   end
 
   defp data(%School{} = school) do

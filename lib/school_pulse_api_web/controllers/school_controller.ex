@@ -53,19 +53,20 @@ defmodule SchoolPulseApiWeb.SchoolController do
     current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
     school = Schools.get_school!(school_id) |> Repo.preload(:users)
 
-    with true <- Bodyguard.permit?(Policy, :count, current_user, school) do
-      counts = %{
-        teachers: Teachers.count_teachers_by_school(school_id),
-        documents: Documents.count_documents_by_school(school_id),
-        leaves: Leaves.count_leaves_by_school(school_id)
-      }
+    case Bodyguard.permit?(Policy, :count, current_user, school) do
+      true ->
+        counts = %{
+          teachers: Teachers.count_teachers_by_school(school_id),
+          documents: Documents.count_documents_by_school(school_id),
+          leaves: Leaves.count_leaves_by_school(school_id)
+        }
 
-      render(conn, :counts, counts: counts)
-    else
-      _ ->
+        render(conn, :counts, counts: counts)
+
+      false ->
         conn
         |> put_status(:forbidden)
-        |> json(%{error: "Access denied"})
+        |> json(%{error: "Access denied - insufficient permissions"})
     end
   end
 
@@ -93,14 +94,7 @@ defmodule SchoolPulseApiWeb.SchoolController do
   def school_summaries(conn, params) do
     current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
 
-    with true <- Bodyguard.permit?(Policy, :view, current_user, %School{}) do
-      school_summaries = Schools.list_school_summaries(params)
-      render(conn, :school_summaries, school_summaries: school_summaries)
-    else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> json(%{error: "Access denied"})
-    end
+    school_summaries = Schools.list_school_summaries(params, current_user)
+    render(conn, :school_summaries, school_summaries: school_summaries)
   end
 end

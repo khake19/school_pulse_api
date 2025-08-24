@@ -22,18 +22,18 @@ defmodule SchoolPulseApi.Schools do
 
   """
   def list_schools(params \\ %{}, current_user) do
-      School
-      |> Flop.validate_and_run(params, for: School)
-      |> case do
-        {:ok, result} ->
-          {schools, meta} = result
+    School
+    |> Flop.validate_and_run(params, for: School)
+    |> case do
+      {:ok, result} ->
+        {schools, meta} = result
 
-          schools
-          |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
-          |> Enum.sort_by(& &1.name)
+        schools
+        |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
+        |> Enum.sort_by(& &1.name)
 
-          {schools, meta}
-      end
+        {schools, meta}
+    end
   end
 
   def list_schools_for_user(user_id) do
@@ -150,9 +150,7 @@ defmodule SchoolPulseApi.Schools do
       %{entries: [%{school: %School{}, teacher_count: 42}, ...], meta: %{...}}
 
   """
-  def list_school_summaries(params \\ %{}) do
-    import Ecto.Query, warn: false
-
+  def list_school_summaries(params \\ %{}, current_user) do
     base_query =
       from(s in School,
         left_join: t in assoc(s, :teachers),
@@ -166,22 +164,13 @@ defmodule SchoolPulseApi.Schools do
     base_query
     |> Flop.validate_and_run(params, for: School)
     |> case do
-      %{entries: entries, meta: meta} ->
-        %{
-          entries:
-            Enum.map(entries, fn %{school: school, teacher_count: count} ->
-              %{school: Repo.preload(school, :users), teacher_count: count}
-            end),
-          meta: meta
-        }
+      {:ok, result} ->
+        {schools, meta} = result
 
-      _ ->
-        # Fallback for when Flop doesn't return expected structure
-        base_query
-        |> Repo.all()
-        |> Enum.map(fn %{school: school, teacher_count: count} ->
-          %{school: Repo.preload(school, :users), teacher_count: count}
-        end)
+        schools
+        |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
+
+        {schools, meta}
     end
   end
 end
