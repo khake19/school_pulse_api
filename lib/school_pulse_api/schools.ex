@@ -7,18 +7,33 @@ defmodule SchoolPulseApi.Schools do
   alias SchoolPulseApi.Repo
 
   alias SchoolPulseApi.Schools.School
+  alias SchoolPulseApi.Schools.Policy
 
   @doc """
-  Returns the list of schools.
+  Returns the list of schools with pagination support.
 
   ## Examples
 
       iex> list_schools()
-      [%School{}, ...]
+      %{entries: [%School{}, ...], meta: %{...}}
+
+      iex> list_schools(%{"page" => 1, "page_size" => 10})
+      %{entries: [%School{}, ...], meta: %{...}}
 
   """
-  def list_schools do
-    Repo.all(School) |> Repo.preload(:users)
+  def list_schools(params \\ %{}, current_user) do
+      School
+      |> Flop.validate_and_run(params, for: School)
+      |> case do
+        {:ok, result} ->
+          {schools, meta} = result
+
+          schools
+          |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
+          |> Enum.sort_by(& &1.name)
+
+          {schools, meta}
+      end
   end
 
   def list_schools_for_user(user_id) do
@@ -117,5 +132,56 @@ defmodule SchoolPulseApi.Schools do
   """
   def change_school(%School{} = school, attrs \\ %{}) do
     School.changeset(school, attrs)
+  end
+
+  def count_schools() do
+    Repo.aggregate(School, :count, :id)
+  end
+
+  @doc """
+  Returns the list of schools with summaries (currently teacher counts), supporting pagination.
+
+  ## Examples
+
+      iex> list_school_summaries()
+      %{entries: [%{school: %School{}, teacher_count: 42}, ...], meta: %{...}}
+
+      iex> list_school_summaries(%{"page" => 1, "page_size" => 10})
+      %{entries: [%{school: %School{}, teacher_count: 42}, ...], meta: %{...}}
+
+  """
+  def list_school_summaries(params \\ %{}) do
+    import Ecto.Query, warn: false
+
+    base_query =
+      from(s in School,
+        left_join: t in assoc(s, :teachers),
+        group_by: s.id,
+        select: %{
+          school: s,
+          teacher_count: count(t.id)
+        }
+      )
+
+    base_query
+    |> Flop.validate_and_run(params, for: School)
+    |> case do
+      %{entries: entries, meta: meta} ->
+        %{
+          entries:
+            Enum.map(entries, fn %{school: school, teacher_count: count} ->
+              %{school: Repo.preload(school, :users), teacher_count: count}
+            end),
+          meta: meta
+        }
+
+      _ ->
+        # Fallback for when Flop doesn't return expected structure
+        base_query
+        |> Repo.all()
+        |> Enum.map(fn %{school: school, teacher_count: count} ->
+          %{school: Repo.preload(school, :users), teacher_count: count}
+        end)
+    end
   end
 end

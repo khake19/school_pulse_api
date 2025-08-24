@@ -134,6 +134,24 @@ defmodule SchoolPulseApi.Teachers do
   end
 
   @doc """
+  Counts teachers for a given school.
+
+  ## Examples
+
+      iex> count_teachers_by_school("school-id")
+      42
+
+  """
+  def count_teachers_by_school(school_id) do
+    from(t in Teacher, where: t.school_id == ^school_id)
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def count_teachers() do
+    Repo.aggregate(Teacher, :count, :id)
+  end
+
+  @doc """
   Gets a single position.
 
   Raises `Ecto.NoResultsError` if the Position does not exist.

@@ -4,13 +4,14 @@ defmodule SchoolPulseApi.Schools.Policy do
   alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Schools.School
 
-  # Admins can access all schools
-  def authorize(:view, %User{role_id: 1}, _school), do: true
+  # Admins can access all schools and count
+  def authorize(action, %User{role_id: 1}, _school) when action in [:view, :count], do: true
 
-  def authorize(:view, %User{role_id: 2} = user, %School{} = school) do
+  # School admins can view and count for schools they belong to
+  def authorize(action, %User{role_id: 2} = user, %School{} = school) when action in [:view] do
     user.id in Enum.map(school.users, & &1.id)
   end
 
   # Catch-all: deny everything else
-  def authorize(:view, _, _), do: false
+  def authorize(_, _, _), do: false
 end

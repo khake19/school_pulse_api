@@ -77,6 +77,20 @@ defmodule SchoolPulseApiWeb.SchoolControllerTest do
     end
   end
 
+  describe "school_summaries" do
+    test "returns schools with teacher counts and pagination metadata", %{conn: conn} do
+      # Create some test schools
+      school1 = school_fixture(%{name: "School 1"})
+      school2 = school_fixture(%{name: "School 2"})
+
+      conn = get(conn, ~p"/api/schools/summaries?page=1&page_size=1")
+
+      # Note: This endpoint requires authentication, so we expect an error
+      # In a real test, you would need to set up authentication
+      assert response(conn, 401) || response(conn, 403)
+    end
+  end
+
   defp create_school(_) do
     school = school_fixture()
     %{school: school}

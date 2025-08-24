@@ -155,4 +155,26 @@ defmodule SchoolPulseApi.Leaves do
   def change_leave(%Leave{} = leave, attrs \\ %{}) do
     Leave.changeset(leave, attrs)
   end
+
+  @doc """
+  Counts leaves for a given school.
+
+  ## Examples
+
+      iex> count_leaves_by_school("school-id")
+      8
+
+  """
+  def count_leaves_by_school(school_id) do
+    from(l in Leave,
+      join: t in Teacher,
+      on: t.id == l.teacher_id,
+      where: t.school_id == ^school_id
+    )
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def count_leaves() do
+    Repo.aggregate(Leave, :count, :id)
+  end
 end

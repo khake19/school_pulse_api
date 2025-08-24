@@ -10,9 +10,64 @@ defmodule SchoolPulseApi.SchoolsTest do
 
     @invalid_attrs %{name: nil}
 
-    test "list_schools/0 returns all schools" do
-      school = school_fixture()
-      assert Schools.list_schools() == [school]
+    test "list_schools/2 returns schools with pagination and permission checking" do
+      # Create a test user with admin role (role_id: 1)
+      user = %SchoolPulseApi.Accounts.User{id: "test-user-id", role_id: 1}
+
+      school1 = school_fixture(%{name: "School 1"})
+      school2 = school_fixture(%{name: "School 2"})
+
+      # Test without pagination params (should return all)
+      result = Schools.list_schools(user)
+      assert {:ok, %{entries: entries, meta: meta}} = result
+      assert length(entries) == 2
+      assert meta
+
+      # Test with pagination params
+      result = Schools.list_schools(user, %{"page" => 1, "page_size" => 1})
+      assert {:ok, %{entries: entries, meta: meta}} = result
+      assert length(entries) == 1
+      assert meta
+      assert meta.current_page == 1
+      assert meta.page_size == 1
+    end
+
+    test "list_schools/2 denies access to unauthorized users" do
+      # Create a test user without admin role (role_id: 2 - school admin)
+      user = %SchoolPulseApi.Accounts.User{id: "test-user-id", role_id: 2}
+
+      result = Schools.list_schools(user)
+      assert {:error, :forbidden} = result
+    end
+
+    test "list_school_summaries/2 returns schools with teacher counts and pagination" do
+      # Create a test user with admin role (role_id: 1)
+      user = %SchoolPulseApi.Accounts.User{id: "test-user-id", role_id: 1}
+
+      school1 = school_fixture(%{name: "School 1"})
+      school2 = school_fixture(%{name: "School 2"})
+
+      # Test without pagination params (should return all)
+      result = Schools.list_school_summaries(user)
+      assert {:ok, %{entries: entries, meta: meta}} = result
+      assert length(entries) == 2
+      assert meta
+
+      # Test with pagination params
+      result = Schools.list_school_summaries(user, %{"page" => 1, "page_size" => 1})
+      assert {:ok, %{entries: entries, meta: meta}} = result
+      assert length(entries) == 1
+      assert meta
+      assert meta.current_page == 1
+      assert meta.page_size == 1
+    end
+
+    test "list_school_summaries/2 denies access to unauthorized users" do
+      # Create a test user without admin role (role_id: 2 - school admin)
+      user = %SchoolPulseApi.Accounts.User{id: "test-user-id", role_id: 2}
+
+      result = Schools.list_school_summaries(user)
+      assert {:error, :forbidden} = result
     end
 
     test "get_school!/1 returns the school with given id" do

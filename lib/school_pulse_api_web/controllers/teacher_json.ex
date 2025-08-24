@@ -1,6 +1,6 @@
 defmodule SchoolPulseApiWeb.TeacherJSON do
   alias SchoolPulseApi.Teachers.Teacher
-  alias SchoolPulseApi.Avatar
+  alias SchoolPulseApiWeb.SharedJSON
 
   @doc """
   Renders a list of teachers.
@@ -8,10 +8,10 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
   def index(%{teachers: teachers}) do
     {teachers, meta} = teachers
 
-    %{
-      data: for(teacher <- teachers, do: data(teacher)),
-      meta: meta_data(meta)
-    }
+    SharedJSON.paginated_response(
+      for(teacher <- teachers, do: data(teacher)),
+      meta
+    )
   end
 
   @doc """
@@ -24,36 +24,44 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
   defp data(%Teacher{} = teacher) do
     %{
       id: teacher.id,
-      position: %{
-        id: teacher.position.id,
-        name: teacher.position.name
-      },
-      first_name: teacher.user.first_name,
-      middle_name: teacher.user.middle_name,
-      last_name: teacher.user.last_name,
-      suffix: teacher.user.suffix,
-      email: teacher.user.email,
-      gender: teacher.user.gender,
       employee_number: teacher.employee_number,
-      avatar: Avatar.url({teacher.user.avatar, teacher.user}, signed: true),
       philhealth: teacher.philhealth,
       gsis: teacher.gsis,
-      tin: teacher.tin,
       pagibig: teacher.pagibig,
+      tin: teacher.tin,
       plantilla: teacher.plantilla,
       date_hired: teacher.date_hired,
-      date_promotion: teacher.date_promotion
+      date_promotion: teacher.date_promotion,
+      position:
+        teacher.position &&
+          %{
+            id: teacher.position.id,
+            name: teacher.position.name,
+            salary_grade: teacher.position.salary_grade,
+            type: teacher.position.type
+          },
+      user:
+        teacher.user &&
+          %{
+            id: teacher.user.id,
+            first_name: teacher.user.first_name,
+            middle_name: teacher.user.middle_name,
+            last_name: teacher.user.last_name,
+            suffix: teacher.user.suffix,
+            email: teacher.user.email,
+            gender: teacher.user.gender,
+            avatar: teacher.user.avatar
+          },
+      school:
+        teacher.school &&
+          %{
+            id: teacher.school.id,
+            name: teacher.school.name
+          }
     }
   end
 
-  # TODO:  make this globally
-  defp meta_data(meta) do
-    %{
-      current_page: meta.current_page,
-      current_offset: meta.current_offset,
-      size: meta.page_size,
-      total: meta.total_count,
-      pages: meta.total_pages
-    }
+  def count(%{count: count}) do
+    %{data: %{count: count}}
   end
 end

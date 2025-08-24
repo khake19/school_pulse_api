@@ -3,12 +3,14 @@ defmodule SchoolPulseApiWeb.TeacherController do
 
   alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Teachers
+  alias SchoolPulseApiWeb.Auth.Guardian
   alias SchoolPulseApi.Teachers.Teacher
   alias SchoolPulseApi.Accounts
   alias SchoolPulseApi.Accounts.User
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Utils.FlopHelper
   alias SchoolPulseApi.Avatar
+  alias SchoolPulseApi.Schools.Policy
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -91,6 +93,36 @@ defmodule SchoolPulseApiWeb.TeacherController do
     with {:ok, %Teacher{}} <- Teachers.delete_teacher(teacher),
          {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def count(conn, _params) do
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+
+    # Check if user has permission to count schools (admin only)
+    with true <- Bodyguard.permit?(Policy, :count, current_user, %Teacher{}) do
+      count = Teachers.count_teachers()
+      render(conn, :count, count: count)
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "Access denied"})
+    end
+  end
+
+  def count_by_school(conn, %{"school_id" => school_id}) do
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+    school = Schools.get_school!(school_id) |> Repo.preload(:users)
+
+    with true <- Bodyguard.permit?(Policy, :count, current_user, school) do
+      count = Teachers.count_teachers_by_school(school_id)
+      render(conn, :count, count: count)
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "Access denied"})
     end
   end
 end

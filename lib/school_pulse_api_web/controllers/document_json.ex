@@ -1,13 +1,18 @@
 defmodule SchoolPulseApiWeb.DocumentJSON do
   alias SchoolPulseApi.Accounts.Document
   alias SchoolPulseApi.FileUploader
+  alias SchoolPulseApiWeb.SharedJSON
 
   @doc """
   Renders a list of documents.
   """
   def index(%{documents: documents}) do
     {documents, meta} = documents
-    %{data: for(document <- documents, do: data(document)), meta: meta_data(meta)}
+
+    SharedJSON.paginated_response(
+      for(document <- documents, do: data(document)),
+      meta
+    )
   end
 
   @doc """
@@ -15,6 +20,10 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
   """
   def show(%{document: document}) do
     %{data: data(document)}
+  end
+
+  def count(%{count: count}) do
+    %{data: %{count: count}}
   end
 
   defp data(%Document{} = document) do
@@ -35,17 +44,6 @@ defmodule SchoolPulseApiWeb.DocumentJSON do
         last_name: document.user.last_name,
         avatar: FileUploader.url({document.user.avatar, document.user}, signed: true)
       }
-    }
-  end
-
-  # TODO:  make this globally
-  defp meta_data(meta) do
-    %{
-      current_page: meta.current_page,
-      current_offset: meta.current_offset,
-      size: meta.page_size,
-      total: meta.total_count,
-      pages: meta.total_pages
     }
   end
 end

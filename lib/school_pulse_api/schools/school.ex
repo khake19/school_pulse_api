@@ -5,6 +5,11 @@ defmodule SchoolPulseApi.Schools.School do
   alias SchoolPulseApi.Teachers
   alias SchoolPulseApi.Accounts
 
+  @derive {
+    Flop.Schema,
+    filterable: [:name], sortable: [:name]
+  }
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "schools" do

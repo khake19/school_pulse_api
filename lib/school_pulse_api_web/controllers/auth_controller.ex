@@ -59,7 +59,10 @@ defmodule SchoolPulseApiWeb.AuthController do
   end
 
   def me(conn, _) do
-    current_user = Guardian.Plug.current_resource(conn)
+    current_user =
+      Guardian.Plug.current_resource(conn)
+      |> SchoolPulseApi.Repo.preload([:role])
+
     render(conn, :me, %{current_user: current_user})
   end
 end

@@ -33,7 +33,11 @@ defmodule SchoolPulseApiWeb.Router do
     pipe_through [:api, :auth]
     resources "/users", UserController, only: [:index, :show]
 
+    get "/schools/counts", SchoolController, :counts_all
+    get "/schools/summaries", SchoolController, :school_summaries
+
     resources "/schools", SchoolController do
+      get "/counts", SchoolController, :counts
       resources "/teachers", TeacherController
       resources "/documents", DocumentController
       resources "/leaves", LeaveController

@@ -1,13 +1,18 @@
 defmodule SchoolPulseApiWeb.LeaveJSON do
   alias SchoolPulseApi.Leaves.Leave
   alias SchoolPulseApi.FileUploader
+  alias SchoolPulseApiWeb.SharedJSON
 
   @doc """
   Renders a list of leaves.
   """
   def index(%{leaves: leaves}) do
     {leaves, meta} = leaves
-    %{data: for(leave <- leaves, do: data(leave)), meta: meta_data(meta)}
+
+    SharedJSON.paginated_response(
+      for(leave <- leaves, do: data(leave)),
+      meta
+    )
   end
 
   @doc """
@@ -34,17 +39,6 @@ defmodule SchoolPulseApiWeb.LeaveJSON do
         last_name: leave.teacher.user.last_name,
         avatar: FileUploader.url({leave.teacher.user.avatar, leave.teacher.user}, signed: true)
       }
-    }
-  end
-
-  # TODO:  make this globally
-  defp meta_data(meta) do
-    %{
-      current_page: meta.current_page,
-      current_offset: meta.current_offset,
-      size: 1000,
-      total: meta.total_count,
-      pages: meta.total_pages
     }
   end
 end

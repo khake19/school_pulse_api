@@ -7,6 +7,7 @@ defmodule SchoolPulseApi.Accounts do
   alias SchoolPulseApi.Repo
 
   alias SchoolPulseApi.Accounts.User
+  alias SchoolPulseApi.Accounts.Role
 
   @doc """
   Returns the list of users.
@@ -153,5 +154,23 @@ defmodule SchoolPulseApi.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  @doc """
+  Creates a role.
+
+  ## Examples
+
+      iex> create_role(%{field: value})
+      {:ok, %Role{}}
+
+      iex> create_role(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_role(attrs \\ %{}) do
+    %Role{}
+    |> Role.changeset(attrs)
+    |> Repo.insert()
   end
 end

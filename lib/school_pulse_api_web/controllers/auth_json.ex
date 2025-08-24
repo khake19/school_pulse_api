@@ -16,6 +16,11 @@ defmodule SchoolPulseApiWeb.AuthJSON do
         gender: current_user.gender,
         email: current_user.email,
         avatar: current_user.avatar,
+        role: %{
+          id: current_user.role.id,
+          name: current_user.role.name,
+          description: current_user.role.description
+        },
         inserted_at: current_user.inserted_at,
         updated_at: current_user.updated_at
       }

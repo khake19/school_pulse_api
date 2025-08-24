@@ -4,19 +4,18 @@ defmodule SchoolPulseApiWeb.SchoolController do
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Schools.School
   alias SchoolPulseApiWeb.Auth.Guardian
-  alias SchoolPulseApi.Repo
   alias SchoolPulseApi.Schools.Policy
+  alias SchoolPulseApi.Repo
+  alias SchoolPulseApi.Teachers
+  alias SchoolPulseApi.Documents
+  alias SchoolPulseApi.Leaves
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
-  def index(conn, _params) do
+  def index(conn, params) do
     current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
 
-    schools =
-      Schools.list_schools()
-      |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
-      |> Enum.sort_by(& &1.name)
-
+    schools = Schools.list_schools(params, current_user)
     render(conn, :index, schools: schools)
   end
 
@@ -47,6 +46,61 @@ defmodule SchoolPulseApiWeb.SchoolController do
 
     with {:ok, %School{}} <- Schools.delete_school(school) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def counts(conn, %{"school_id" => school_id}) do
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+    school = Schools.get_school!(school_id) |> Repo.preload(:users)
+
+    with true <- Bodyguard.permit?(Policy, :count, current_user, school) do
+      counts = %{
+        teachers: Teachers.count_teachers_by_school(school_id),
+        documents: Documents.count_documents_by_school(school_id),
+        leaves: Leaves.count_leaves_by_school(school_id)
+      }
+
+      render(conn, :counts, counts: counts)
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "Access denied"})
+    end
+  end
+
+  def counts_all(conn, _params) do
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+
+    # Check if user has permission to view counts (admin only)
+    with true <- Bodyguard.permit?(Policy, :count, current_user, %School{}) do
+      counts = %{
+        schools: Schools.count_schools(),
+        teachers: Teachers.count_teachers(),
+        documents: Documents.count_documents(),
+        leaves: Leaves.count_leaves()
+      }
+
+      render(conn, :counts_all, counts: counts)
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "Access denied"})
+    end
+  end
+
+  def school_summaries(conn, params) do
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+
+    with true <- Bodyguard.permit?(Policy, :view, current_user, %School{}) do
+      school_summaries = Schools.list_school_summaries(params)
+      render(conn, :school_summaries, school_summaries: school_summaries)
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "Access denied"})
     end
   end
 end

@@ -13,12 +13,17 @@ defmodule SchoolPulseApi.AccountsFixtures do
   Generate a user.
   """
   def user_fixture(attrs \\ %{}) do
+    # Create a role if not provided
+    role = Map.get(attrs, :role_id) || SchoolPulseApi.RolesFixtures.role_fixture()
+
     {:ok, user} =
       attrs
       |> Enum.into(%{
         first_name: "some first_name",
         last_name: "some last_name",
-        email: unique_user_email()
+        email: unique_user_email(),
+        password: "password123",
+        role_id: role.id
       })
       |> SchoolPulseApi.Accounts.create_user()
 

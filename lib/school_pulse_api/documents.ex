@@ -167,4 +167,28 @@ defmodule SchoolPulseApi.Documents do
 
   def get_document_type_by_id!(id),
     do: Repo.get_by!(DocumentType, id: id)
+
+  @doc """
+  Counts documents for a given school.
+
+  ## Examples
+
+      iex> count_documents_by_school("school-id")
+      42
+
+  """
+  def count_documents_by_school(school_id) do
+    from(d in Document,
+      join: u in User,
+      on: u.id == d.user_id,
+      join: t in Teacher,
+      on: t.user_id == u.id,
+      where: t.school_id == ^school_id
+    )
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def count_documents() do
+    Repo.aggregate(Document, :count, :id)
+  end
 end
