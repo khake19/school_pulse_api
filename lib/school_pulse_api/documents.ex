@@ -191,4 +191,23 @@ defmodule SchoolPulseApi.Documents do
   def count_documents() do
     Repo.aggregate(Document, :count, :id)
   end
+
+  def count_documents_for_user(current_user) do
+    query = from(d in Document)
+    filtered_query = filter_documents_by_role(query, current_user)
+    Repo.aggregate(filtered_query, :count, :id)
+  end
+
+  defp filter_documents_by_role(query, %{role: %{name: "admin"}}), do: query
+
+  defp filter_documents_by_role(query, %{role: %{name: "school admin"}, schools: schools}) do
+    school_ids = for s <- schools, do: s.id
+
+    from d in query,
+      join: u in User,
+      on: u.id == d.user_id,
+      join: t in Teacher,
+      on: t.user_id == u.id,
+      where: t.school_id in ^school_ids
+  end
 end

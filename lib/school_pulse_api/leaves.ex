@@ -177,4 +177,23 @@ defmodule SchoolPulseApi.Leaves do
   def count_leaves() do
     Repo.aggregate(Leave, :count, :id)
   end
+
+  @doc """
+  Counts leaves accessible to the given user.
+  Admins get global counts; school admins are filtered by their schools.
+  """
+  def count_leaves_for_user(%{role: %{name: "admin"}}) do
+    Repo.aggregate(Leave, :count, :id)
+  end
+
+  def count_leaves_for_user(%{role: %{name: "school admin"}, schools: schools}) do
+    school_ids = for s <- schools, do: s.id
+
+    from(l in Leave,
+      join: t in Teacher,
+      on: t.id == l.teacher_id,
+      where: t.school_id in ^school_ids
+    )
+    |> Repo.aggregate(:count, :id)
+  end
 end

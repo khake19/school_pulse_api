@@ -4,11 +4,7 @@ defmodule SchoolPulseApiWeb.SchoolController do
   alias SchoolPulseApi.Schools
   alias SchoolPulseApi.Schools.School
   alias SchoolPulseApiWeb.Auth.Guardian
-  alias SchoolPulseApi.Schools.Policy
   alias SchoolPulseApi.Repo
-  alias SchoolPulseApi.Teachers
-  alias SchoolPulseApi.Documents
-  alias SchoolPulseApi.Leaves
 
   action_fallback SchoolPulseApiWeb.FallbackController
 
@@ -50,46 +46,11 @@ defmodule SchoolPulseApiWeb.SchoolController do
     end
   end
 
-  def counts(conn, %{"school_id" => school_id}) do
+  def counts(conn, _params) do
     current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload([:role, :schools])
-    school = Schools.get_school!(school_id) |> Repo.preload(:users)
 
-    case Bodyguard.permit?(Policy, :count, current_user, school) do
-      true ->
-        counts = %{
-          teachers: Teachers.count_teachers_by_school(school_id),
-          documents: Documents.count_documents_by_school(school_id),
-          leaves: Leaves.count_leaves_by_school(school_id)
-        }
-
-        render(conn, :counts, counts: counts)
-
-      false ->
-        conn
-        |> put_status(:forbidden)
-        |> json(%{error: "Access denied - insufficient permissions"})
-    end
-  end
-
-  def counts_all(conn, _params) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
-
-    # Check if user has permission to view counts (admin only)
-    with true <- Bodyguard.permit?(Policy, :count, current_user, %School{}) do
-      counts = %{
-        schools: Schools.count_schools(),
-        teachers: Teachers.count_teachers(),
-        documents: Documents.count_documents(),
-        leaves: Leaves.count_leaves()
-      }
-
-      render(conn, :counts_all, counts: counts)
-    else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> json(%{error: "Access denied"})
-    end
+    counts = Schools.count_all_for_user(current_user)
+    render(conn, :counts, counts: counts)
   end
 
   def school_summaries(conn, params) do

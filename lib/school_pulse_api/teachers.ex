@@ -133,22 +133,23 @@ defmodule SchoolPulseApi.Teachers do
     Repo.all(Position)
   end
 
-  @doc """
-  Counts teachers for a given school.
-
-  ## Examples
-
-      iex> count_teachers_by_school("school-id")
-      42
-
-  """
-  def count_teachers_by_school(school_id) do
-    from(t in Teacher, where: t.school_id == ^school_id)
-    |> Repo.aggregate(:count, :id)
-  end
-
   def count_teachers() do
     Repo.aggregate(Teacher, :count, :id)
+  end
+
+  @doc """
+  Counts teachers accessible to the given user.
+  Admins get global counts; school admins are filtered by their schools.
+  """
+  def count_teachers_for_user(%{role: %{name: "admin"}}) do
+    Repo.aggregate(Teacher, :count, :id)
+  end
+
+  def count_teachers_for_user(%{role: %{name: "school admin"}, schools: schools}) do
+    school_ids = for s <- schools, do: s.id
+
+    from(t in Teacher, where: t.school_id in ^school_ids)
+    |> Repo.aggregate(:count, :id)
   end
 
   @doc """

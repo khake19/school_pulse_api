@@ -7,7 +7,9 @@ defmodule SchoolPulseApi.Schools do
   alias SchoolPulseApi.Repo
 
   alias SchoolPulseApi.Schools.School
-  alias SchoolPulseApi.Schools.Policy
+  alias SchoolPulseApi.Teachers
+  alias SchoolPulseApi.Leaves
+  alias SchoolPulseApi.Documents
 
   @doc """
   Returns the list of schools with pagination support.
@@ -31,23 +33,6 @@ defmodule SchoolPulseApi.Schools do
     {:ok, result} = Flop.validate_and_run(query, params, for: School)
 
     result
-  end
-
-  def list_schools_for_user(user_id) do
-    case Ecto.UUID.dump(user_id) do
-      {:ok, binary_id} ->
-        from(s in School,
-          join: sa in "school_admins",
-          on: sa.school_id == s.id,
-          where: sa.user_id == ^binary_id
-        )
-        |> Repo.all()
-        |> Repo.preload(:users)
-
-      :error ->
-        # Return empty list if user_id is invalid
-        []
-    end
   end
 
   @doc """
@@ -131,9 +116,24 @@ defmodule SchoolPulseApi.Schools do
     School.changeset(school, attrs)
   end
 
-  def count_schools() do
-    Repo.aggregate(School, :count, :id)
+  @doc """
+  Returns aggregated counts for schools, teachers, documents, and leaves
+  filtered by the current user's accessible schools. Admins get global counts.
+  """
+  def count_all_for_user(current_user) do
+    # Base queries
+    schools_query = from(s in School)
+    schools_query = filter_schools_by_role(schools_query, current_user)
+
+    %{
+      schools: Repo.aggregate(schools_query, :count, :id),
+      teachers: Teachers.count_teachers_for_user(current_user),
+      documents: Documents.count_documents_for_user(current_user),
+      leaves: Leaves.count_leaves_for_user(current_user)
+    }
   end
+
+  # teacher and leave filters moved to their contexts
 
   @doc """
   Returns the list of schools with summaries (currently teacher counts), supporting pagination.
