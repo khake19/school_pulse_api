@@ -9,10 +9,11 @@ defmodule SchoolPulseApi.Schools.Policy do
     do: true
 
   # School admins can view and count for schools they belong to
-  def authorize(action, %User{role: %{name: "school admin"}} = user, %School{} = school)
+  def authorize(action, %User{role: %{name: "school admin"}} = current_user, %School{
+        id: school_id
+      })
       when action in [:view, :count] do
-    # Check specific school access
-    user.id in Enum.map(school.users, & &1.id)
+    Enum.any?(current_user.schools, fn s -> s.id == school_id end)
   end
 
   # Catch-all: deny everything else

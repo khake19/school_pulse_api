@@ -100,7 +100,6 @@ schools = [
 # Get all existing schools from the database
 school_records = Repo.all(School)
 
-
 positions = [
   %{
     name: ~c"Teacher I",
@@ -224,7 +223,6 @@ position_records =
 generate_random_name = fn ->
   gender = Enum.random([:male, :female])
 
-
   first_name = UniqueNamesGenerator.generate([:names])
   last_name = UniqueNamesGenerator.generate([:names])
 
@@ -238,17 +236,20 @@ Enum.each(school_records, fn school ->
     {first_name, last_name, gender} = generate_random_name.()
 
     # Generate unique email and employee number
-    email = "#{String.downcase(first_name)}#{teacher_index}@#{String.replace(school.name, " ", "") |> String.downcase()}.edu.ph"
-    employee_number = "T#{String.pad_leading("#{teacher_index}", 3, "0")}#{String.slice(school.name, 0, 3)}"
+    email =
+      "#{String.downcase(first_name)}#{teacher_index}@#{String.replace(school.name, " ", "") |> String.downcase()}.edu.ph"
+
+    employee_number =
+      "T#{String.pad_leading("#{teacher_index}", 3, "0")}#{String.slice(school.name, 0, 3)}"
 
     # Create user
-    user = Repo.insert!(%User{
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
-      password: Argon2.hash_pwd_salt("password123"),
-      gender: Atom.to_string(gender)
-    })
+    user =
+      Repo.insert!(%User{
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        gender: Atom.to_string(gender)
+      })
 
     # Create teacher
     Repo.insert!(%Teacher{
@@ -256,11 +257,11 @@ Enum.each(school_records, fn school ->
       position_id: Enum.random(position_records).id,
       school_id: school.id,
       employee_number: employee_number,
-      philhealth: "PH#{:rand.uniform(999999999)}",
-      gsis: "GSIS#{:rand.uniform(999999999)}",
-      pagibig: "PAGIBIG#{:rand.uniform(999999999)}",
-      tin: "TIN#{:rand.uniform(999999999)}",
-      plantilla: "PL#{:rand.uniform(999999)}",
+      philhealth: "PH#{:rand.uniform(999_999_999)}",
+      gsis: "GSIS#{:rand.uniform(999_999_999)}",
+      pagibig: "PAGIBIG#{:rand.uniform(999_999_999)}",
+      tin: "TIN#{:rand.uniform(999_999_999)}",
+      plantilla: "PL#{:rand.uniform(999_999)}",
       date_hired: Date.add(Date.utc_today(), -:rand.uniform(365 * 10)),
       date_promotion: Date.add(Date.utc_today(), -:rand.uniform(365 * 5))
     })

@@ -25,14 +25,16 @@ defmodule SchoolPulseApi.Schools do
     School
     |> Flop.validate_and_run(params, for: School)
     |> case do
-      {:ok, result} ->
-        {schools, meta} = result
-
-        schools
-        |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
-        |> Enum.sort_by(& &1.name)
+      {:ok, {schools, meta}} ->
+        schools =
+          schools
+          |> Enum.filter(&Bodyguard.permit?(Policy, :view, current_user, &1))
+          |> Enum.sort_by(& &1.name)
 
         {schools, meta}
+
+      error ->
+        error
     end
   end
 
@@ -152,25 +154,26 @@ defmodule SchoolPulseApi.Schools do
   """
   def list_school_summaries(params \\ %{}, current_user) do
     base_query =
-      from(s in School,
+      from s in School,
         left_join: t in assoc(s, :teachers),
         group_by: s.id,
         select: %{
           school: s,
           teacher_count: count(t.id)
         }
-      )
 
-    base_query
-    |> Flop.validate_and_run(params, for: School)
-    |> case do
-      {:ok, result} ->
-        {schools, meta} = result
+    query = filter_schools_by_role(base_query, current_user)
 
-        schools
-        |> Enum.filter(fn school -> Bodyguard.permit?(Policy, :view, current_user, school) end)
+    {:ok, result} = Flop.validate_and_run(query, params, for: School)
+    result
+  end
 
-        {schools, meta}
-    end
+  # ---- Role-based filtering ----
+
+  defp filter_schools_by_role(query, %{role: %{name: "admin"}}), do: query
+
+  defp filter_schools_by_role(query, %{role: %{name: "school admin"}, schools: schools}) do
+    school_ids = for s <- schools, do: s.id
+    from s in query, where: s.id in ^school_ids
   end
 end

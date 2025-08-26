@@ -13,9 +13,10 @@ defmodule SchoolPulseApiWeb.SchoolController do
   action_fallback SchoolPulseApiWeb.FallbackController
 
   def index(conn, params) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload([:role, :schools])
 
     schools = Schools.list_schools(params, current_user)
+
     render(conn, :index, schools: schools)
   end
 
@@ -50,7 +51,7 @@ defmodule SchoolPulseApiWeb.SchoolController do
   end
 
   def counts(conn, %{"school_id" => school_id}) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload([:role, :schools])
     school = Schools.get_school!(school_id) |> Repo.preload(:users)
 
     case Bodyguard.permit?(Policy, :count, current_user, school) do
@@ -92,7 +93,7 @@ defmodule SchoolPulseApiWeb.SchoolController do
   end
 
   def school_summaries(conn, params) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
+    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload([:role, :schools])
 
     school_summaries = Schools.list_school_summaries(params, current_user)
     render(conn, :school_summaries, school_summaries: school_summaries)

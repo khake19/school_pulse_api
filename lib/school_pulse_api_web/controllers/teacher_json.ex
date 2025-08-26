@@ -47,7 +47,7 @@ defmodule SchoolPulseApiWeb.TeacherJSON do
             name: teacher.position.name,
             salary_grade: teacher.position.salary_grade,
             type: teacher.position.type
-          },
+          }
     }
   end
 
