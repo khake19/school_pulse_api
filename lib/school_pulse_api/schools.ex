@@ -22,20 +22,15 @@ defmodule SchoolPulseApi.Schools do
 
   """
   def list_schools(params \\ %{}, current_user) do
-    School
-    |> Flop.validate_and_run(params, for: School)
-    |> case do
-      {:ok, {schools, meta}} ->
-        schools =
-          schools
-          |> Enum.filter(&Bodyguard.permit?(Policy, :view, current_user, &1))
-          |> Enum.sort_by(& &1.name)
+    base_query =
+      from s in School,
+        order_by: s.name
 
-        {schools, meta}
+    query = filter_schools_by_role(base_query, current_user)
 
-      error ->
-        error
-    end
+    {:ok, result} = Flop.validate_and_run(query, params, for: School)
+
+    result
   end
 
   def list_schools_for_user(user_id) do
