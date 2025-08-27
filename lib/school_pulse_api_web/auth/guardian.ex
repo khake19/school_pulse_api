@@ -23,6 +23,24 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
     {:error, :no_id_provided}
   end
 
+  def refresh_access_token(refresh_token) do
+    case decode_and_verify(refresh_token, %{}, token_type: "refresh") do
+      {:ok, claims} ->
+        case resource_from_claims(claims) do
+          {:ok, user} ->
+            # Create new access token
+            {:ok, new_access_token, _claims} = encode_and_sign(user, %{}, token_type: "access")
+            {:ok, user, new_access_token}
+
+          {:error, reason} ->
+            {:error, reason}
+        end
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   def authenticate(email, password) do
     case Accounts.get_account_by_email(email) do
       nil ->
@@ -41,8 +59,14 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
   end
 
   defp create_token(account) do
-    {:ok, token, _claims} = encode_and_sign(account)
-    {:ok, account, token}
+    # Create access token (short-lived)
+    {:ok, access_token, _claims} =
+      encode_and_sign(account, %{}, token_type: "access", ttl: {15, :seconds})
+
+    # Create refresh token (long-lived)
+    {:ok, refresh_token, _claims} = encode_and_sign(account, %{}, token_type: "refresh")
+
+    {:ok, account, access_token, refresh_token}
   end
 
   def after_encode_and_sign(resource, claims, token, _options) do
@@ -67,5 +91,22 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
     with {:ok, _} <- Guardian.DB.on_revoke(claims, token) do
       {:ok, claims}
     end
+  end
+
+  def revoke_refresh_token(refresh_token) do
+    case decode_and_verify(refresh_token, %{}, token_type: "refresh") do
+      {:ok, claims} ->
+        Guardian.revoke(refresh_token)
+        {:ok, claims}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def cleanup_expired_tokens do
+    # This will be handled by Guardian.DB sweep_interval configuration
+    # But we can add custom cleanup logic here if needed
+    Guardian.DB.cleanup()
   end
 end

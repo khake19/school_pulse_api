@@ -62,7 +62,14 @@ config :phoenix, :json_library, Jason
 
 config :school_pulse_api, SchoolPulseApiWeb.Auth.Guardian,
   issuer: "school_pulse_api",
-  secret_key: "5fsvBQuIYHszLGTjtDtKsNa1VCUkJXauJktpCnjQhR2G9Wo9GJSYYWgs0KIWjT1z"
+  secret_key: "5fsvBQuIYHszLGTjtDtKsNa1VCUkJXauJktpCnjQhR2G9Wo9GJSYYWgs0KIWjT1z",
+  # Access token expires in 15 minutes
+  token_ttl: %{
+    # Access token TTL of 15 minutes
+    access: {15, :minutes},
+    # Refresh token TTL of 7 days
+    refresh: {7, :days}
+  }
 
 config :guardian, Guardian.DB,
   repo: SchoolPulseApi.Repo,

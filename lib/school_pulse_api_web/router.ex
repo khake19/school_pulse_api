@@ -27,6 +27,7 @@ defmodule SchoolPulseApiWeb.Router do
     pipe_through :api
     post "/auth/sign_up", AuthController, :sign_up
     post "/auth/sign_in", AuthController, :sign_in
+    post "/auth/refresh_token", AuthController, :refresh_token
   end
 
   scope "/api", SchoolPulseApiWeb do
@@ -46,7 +47,7 @@ defmodule SchoolPulseApiWeb.Router do
     get "/positions", PositionController, :index
 
     get "/auth/sign_out", AuthController, :sign_out
-    get "/auth/refresh_token", AuthController, :refresh_token
+    post "/auth/sign_out_all", AuthController, :sign_out_all
     get "/auth/me", AuthController, :me
   end
 
