@@ -25,16 +25,24 @@ defmodule SchoolPulseApi.Teachers do
       |> join(:left, [t], p in assoc(t, :position), as: :positions)
       |> where([t], t.school_id == ^school_id)
 
-    params = %{
-      filters: [
-        %{field: :position_id, op: :in, value: params["position_id"]}
-      ]
-    }
+      position_ids = Map.get(params, "position_id")
+
+      extra_filters =
+        case position_ids do
+          nil -> []
+          [] -> []
+          _ -> [%{field: :position_id, op: :in, value: position_ids}]
+        end
+
+      merged_params =
+        Map.update(params, "filters", extra_filters, fn existing ->
+          (existing || []) ++ extra_filters
+        end)
 
     query
     |> order_by([t], desc: t.inserted_at)
     |> preload([:user, :school, :position])
-    |> Flop.validate_and_run(params, for: Teacher)
+    |> Flop.validate_and_run(merged_params, for: Teacher)
   end
 
   @doc """
