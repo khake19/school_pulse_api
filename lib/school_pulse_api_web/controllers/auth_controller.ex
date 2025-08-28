@@ -55,8 +55,10 @@ defmodule SchoolPulseApiWeb.AuthController do
     end
   end
 
-  def refresh_token(_conn, _params) do
-    raise ErrorResponse.BadRequest, message: "Refresh token is required"
+  def refresh_token(conn, _params) do
+    conn
+    |> put_status(:bad_request)
+    |> json(%{error: "Refresh token is required"})
   end
 
   def sign_out(conn, %{}) do

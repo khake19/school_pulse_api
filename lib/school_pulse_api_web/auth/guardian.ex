@@ -96,17 +96,11 @@ defmodule SchoolPulseApiWeb.Auth.Guardian do
   def revoke_refresh_token(refresh_token) do
     case decode_and_verify(refresh_token, %{}, token_type: "refresh") do
       {:ok, claims} ->
-        Guardian.revoke(refresh_token)
+        Guardian.revoke(SchoolPulseApiWeb.Auth.Guardian, refresh_token, [])
         {:ok, claims}
 
       {:error, reason} ->
         {:error, reason}
     end
-  end
-
-  def cleanup_expired_tokens do
-    # This will be handled by Guardian.DB sweep_interval configuration
-    # But we can add custom cleanup logic here if needed
-    Guardian.DB.cleanup()
   end
 end

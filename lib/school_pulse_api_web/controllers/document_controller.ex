@@ -6,8 +6,6 @@ defmodule SchoolPulseApiWeb.DocumentController do
   alias SchoolPulseApi.Teachers
   alias SchoolPulseApi.Documents
   alias SchoolPulseApi.FileUploader
-  alias SchoolPulseApiWeb.Auth.Guardian
-  alias SchoolPulseApi.Schools.Policy
   import Ecto.Query, warn: false
 
   action_fallback SchoolPulseApiWeb.FallbackController
@@ -96,45 +94,9 @@ defmodule SchoolPulseApiWeb.DocumentController do
     # SchoolPulseApi.FileUploaded.delete({document.path.file_name, document})
 
     with {:ok, %Document{}} <- Documents.delete_document(document) do
-      send_resp(conn, :no_content, "")
-    end
-  end
-
-  def count(conn, _params) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
-
-    # Check if user has permission to count schools (admin only)
-    with true <- Bodyguard.permit?(Policy, :count, current_user, %Document{}) do
-      count = Repo.aggregate(Document, :count, :id)
-      render(conn, :count, count: count)
-    else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> json(%{error: "Access denied"})
-    end
-  end
-
-  def count_by_school(conn, %{"school_id" => school_id}) do
-    current_user = conn |> Guardian.Plug.current_resource() |> Repo.preload(:role)
-    school = SchoolPulseApi.Schools.get_school!(school_id) |> Repo.preload(:users)
-
-    with true <- Bodyguard.permit?(Policy, :count, current_user, school) do
-      query =
-        from d in Document,
-          join: u in SchoolPulseApi.Accounts.User,
-          on: u.id == d.user_id,
-          join: t in SchoolPulseApi.Teachers.Teacher,
-          on: t.user_id == u.id,
-          where: t.school_id == ^school_id
-
-      count = Repo.aggregate(query, :count, :id)
-      render(conn, :count, count: count)
-    else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> json(%{error: "Access denied"})
+      conn
+      |> put_status(:ok)
+      |> json(%{message: "Deleted"})
     end
   end
 end
