@@ -30,7 +30,7 @@ defmodule SchoolPulseApiWeb.SharedJSON do
   """
   def error_response(message, code \\ "error") do
     %{error: %{message: message}}
-    |> Map.put_in([:error, :code], code)
+    |> put_in([:error, :code], code)
   end
 
   @doc """

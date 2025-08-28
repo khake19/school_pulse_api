@@ -1,9 +1,29 @@
 defmodule SchoolPulseApiWeb.AuthJSON do
+  def account_token(%{account: account, access_token: access_token}) do
+    %{
+      id: account.id,
+      email: account.email,
+      access_token: access_token
+    }
+  end
+
   def account_token(%{account: account, token: token}) do
     %{
       id: account.id,
       email: account.email,
       token: token
+    }
+  end
+
+  def account_tokens(%{account: account, access_token: access_token, refresh_token: refresh_token}) do
+    %{
+      id: account.id,
+      email: account.email,
+      access_token: access_token,
+      refresh_token: refresh_token,
+      token_type: "Bearer",
+      # 15 minutes in seconds
+      expires_in: 900
     }
   end
 

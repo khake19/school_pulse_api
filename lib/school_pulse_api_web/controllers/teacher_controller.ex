@@ -90,7 +90,9 @@ defmodule SchoolPulseApiWeb.TeacherController do
 
     with {:ok, %Teacher{}} <- Teachers.delete_teacher(teacher),
          {:ok, %User{}} <- Accounts.delete_user(user) do
-      send_resp(conn, :no_content, "")
+      conn
+      |> put_status(:ok)
+      |> json(%{message: "Deleted"})
     end
   end
 end
