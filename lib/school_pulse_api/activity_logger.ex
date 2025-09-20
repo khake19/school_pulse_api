@@ -21,6 +21,6 @@ defmodule SchoolPulseApi.ActivityLogger do
     }
 
 
-    Activity.create_activity_with_context(conn, attrs)
+    Activities.create_activity_with_context(conn, attrs)
   end
 end

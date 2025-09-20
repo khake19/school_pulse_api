@@ -32,7 +32,7 @@ defmodule SchoolPulseApi.Activities do
   end
 
   def get_user_agent(conn) do
-    conn.get_req_header(conn, "user-agent")
+    get_req_header(conn, "user-agent")
     |> List.first()
     |> case do
       nil -> "Unknown"

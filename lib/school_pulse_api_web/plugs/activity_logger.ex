@@ -1,6 +1,8 @@
 defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
 
   import Plug.Conn
+  alias SchoolPulseApi.ActivityLogger
+
   @moduledoc """
   A plug that Logs activities after controller actions complete.
   """
@@ -38,8 +40,23 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
       action = Phoenix.Controller.action_name(conn)
 
       case Map.get(@config, controller) do
-        %{entity_type: entity, actions: actions, enabled: true} ->
-        _->
+        %{entity_type: entity_type, actions: actions, enabled: true} ->
+          action_type = get_action(conn)
+
+          if action_type in actions and conn.status in [200, 201] and conn.assigns[:current_user] do
+            entity_id = get_entity_id(conn, entity_type)
+            description = build_description(action_type, entity_type)
+
+            ActivityLogger.log_activity(
+              conn,
+              action_type,
+              entity_type,
+              entity_id,
+              description,
+              %{controller: controller, action: Phoenix.Controller.action_name(conn)}
+            )
+          end
+        _ ->
           :ok
       end
 
@@ -65,9 +82,25 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
   end
 
   def get_controller_name(conn) do
-    Phoenix.Controller.controller_module(conn) 
+    Phoenix.Controller.controller_module(conn)
     |> to_string()
     |> String.split(".")
     |> List.last()
+  end
+
+  defp get_entity_id(conn, _entity_type) do
+    case conn.path_params do
+      %{"id" => id} -> id
+      _ -> nil
+    end
+  end
+
+  defp build_description(action_type, entity_type) do
+    case action_type do
+      :created -> "Created #{entity_type}"
+      :updated -> "Updated #{entity_type}"
+      :deleted -> "Deleted #{entity_type}"
+      _ -> "Performed #{action_type} on #{entity_type}"
+    end
   end
 end
