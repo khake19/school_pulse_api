@@ -1,5 +1,4 @@
 defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
-
   import Plug.Conn
   alias SchoolPulseApi.ActivityLogger
 
@@ -10,31 +9,29 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
   @config %{
     "TeacherController" => %{
       entity_type: :teacher,
-      actions: [:create, :update, :delete],
+      actions: [:created, :updated, :deleted],
       enabled: true
-    }, 
+    },
     "SchoolController" => %{
       entity_type: :school,
-      actions: [:create, :update, :delete],
+      actions: [:created, :updated, :deleted],
       enabled: true
-    }, 
+    },
     "DocumentController" => %{
       entity_type: :document,
-      actions: [:create, :update, :delete],
+      actions: [:created, :updated, :deleted],
       enabled: true
-    }, 
+    },
     "LeaveController" => %{
       entity_type: :leave,
-      actions: [:create, :update, :delete],
+      actions: [:created, :updated, :deleted],
       enabled: false
-    } 
+    }
   }
 
   def init(opts), do: opts
 
-
   def call(conn, _opts) do
-
     register_before_send(conn, fn conn ->
       controller = get_controller_name(conn)
       action = Phoenix.Controller.action_name(conn)
@@ -43,7 +40,7 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
         %{entity_type: entity_type, actions: actions, enabled: true} ->
           action_type = get_action(conn)
 
-          if action_type in actions and conn.status in [200, 201] and conn.assigns[:current_user] do
+          if action_type in actions and conn.status in [200, 201] and conn.assigns[:account] do
             entity_id = get_entity_id(conn, entity_type)
             description = build_description(action_type, entity_type)
 
@@ -53,9 +50,10 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
               entity_type,
               entity_id,
               description,
-              %{controller: controller, action: Phoenix.Controller.action_name(conn)}
+              %{controller: controller, action: action}
             )
           end
+
         _ ->
           :ok
       end
@@ -64,19 +62,12 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
     end)
   end
 
-  # defp should_log?(conn) do
-  #   # config.enabled && conn.assigns[:current_user] &&
-  #   # conn.status in [200, 201] &&
-  #   # get_controller_name(conn) &&
-  #   # get_action(conn) in config.actions
-  # end
-
   def get_action(conn) do
     case conn.method do
-      "POST" -> :create
-      "PUT" -> :update
-      "PATCH" -> :update
-      "DELETE" -> :delete
+      "POST" -> :created
+      "PUT" -> :updated
+      "PATCH" -> :updated
+      "DELETE" -> :deleted
       _ -> :other
     end
   end
@@ -88,10 +79,37 @@ defmodule SchoolPulseApiWeb.Plugs.ActivityLogger do
     |> List.last()
   end
 
-  defp get_entity_id(conn, _entity_type) do
-    case conn.path_params do
-      %{"id" => id} -> id
+  defp get_entity_id(conn, entity_type) do
+    case {conn.path_params, get_action(conn)} do
+      {%{"id" => id}, _} -> id
+      {_, :created} -> extract_id_from_response(conn, entity_type)
       _ -> nil
+    end
+  end
+
+  def extract_id_from_response(conn, _entity_type) do
+    case conn.resp_body do
+      body when is_binary(body) ->
+        case Jason.decode(body) do
+          {:ok, %{"data" => %{"id" => id}}} -> id
+          _ -> nil
+        end
+
+      iodata when is_list(iodata) ->
+        # Convert iodata to binary and then parse JSON
+        try do
+          json_string = IO.iodata_to_binary(iodata)
+
+          case Jason.decode(json_string) do
+            {:ok, %{"data" => %{"id" => id}}} -> id
+            _ -> nil
+          end
+        rescue
+          _ -> nil
+        end
+
+      _ ->
+        nil
     end
   end
 

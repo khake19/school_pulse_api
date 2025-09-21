@@ -7,7 +7,7 @@ defmodule SchoolPulseApi.ActivityLogger do
 
   @doc """
   Logs a user activity with automatic context extraction
-
+  
   iex> log_activity(conn, :created, :teacher, teacher_id, "Created new teacher", %{name: "John Doe"})
   """
 
@@ -19,7 +19,6 @@ defmodule SchoolPulseApi.ActivityLogger do
       description: description,
       metadata: metadata
     }
-
 
     Activities.create_activity_with_context(conn, attrs)
   end

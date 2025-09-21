@@ -8,13 +8,13 @@ defmodule SchoolPulseApi.Activities do
   alias SchoolPulseApi.Activities.Activity
 
   def create_activity(attrs \\ %{}) do
-     %Activity{}
-     |> Activity.changeset(attrs)
-     |> Repo.insert()
+    %Activity{}
+    |> Activity.changeset(attrs)
+    |> Repo.insert()
   end
 
   def create_activity_with_context(conn, attrs) do
-    user = conn.assigns.current_user
+    user = conn.assigns.account
 
     activity_attrs =
       attrs
@@ -32,7 +32,7 @@ defmodule SchoolPulseApi.Activities do
   end
 
   def get_user_agent(conn) do
-    get_req_header(conn, "user-agent")
+    Plug.Conn.get_req_header(conn, "user-agent")
     |> List.first()
     |> case do
       nil -> "Unknown"

@@ -22,7 +22,6 @@ defmodule SchoolPulseApiWeb.Router do
     plug SchoolPulseApiWeb.Auth.Pipeline
     plug SchoolPulseApiWeb.Auth.SetAccount
     plug SchoolPulseApiWeb.Plugs.ActivityLogger
-
   end
 
   scope "/api", SchoolPulseApiWeb do
@@ -51,7 +50,6 @@ defmodule SchoolPulseApiWeb.Router do
     get "/auth/sign_out", AuthController, :sign_out
     post "/auth/sign_out_all", AuthController, :sign_out_all
     get "/auth/me", AuthController, :me
-
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

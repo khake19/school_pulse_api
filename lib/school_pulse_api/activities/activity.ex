@@ -1,4 +1,4 @@
- defmodule SchoolPulseApi.Activities.Activity do
+defmodule SchoolPulseApi.Activities.Activity do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -20,7 +20,23 @@
   @doc false
   def changeset(activity, attrs) do
     activity
-    |> cast(attrs, [:activity_type, :entity_type, :entity_id, :description, :metadata, :ip_address, :user_agent])
-    |> validate_required([:activity_type, :entity_type, :entity_id, :description, :metadata, :ip_address, :user_agent])
+    |> cast(attrs, [
+      :activity_type,
+      :entity_type,
+      :entity_id,
+      :description,
+      :metadata,
+      :ip_address,
+      :user_agent
+    ])
+    |> validate_required([
+      :activity_type,
+      :entity_type,
+      :entity_id,
+      :description,
+      :metadata,
+      :ip_address,
+      :user_agent
+    ])
   end
 end
